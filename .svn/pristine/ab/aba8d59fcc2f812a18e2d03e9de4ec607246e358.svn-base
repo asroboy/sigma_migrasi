@@ -1,0 +1,49 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package domain;
+
+import java.math.BigDecimal;
+
+/**
+ *
+ * @author wallet
+ */
+public class MdLegalConstraintsOther implements java.io.Serializable{
+    
+    private BigDecimal mdLegalConstraintsId;
+    private String otherConstraints;
+
+    public MdLegalConstraintsOther() {
+    }
+
+    public MdLegalConstraintsOther(BigDecimal mdLegalConstraintsId) {
+        this.mdLegalConstraintsId = mdLegalConstraintsId;
+    }
+
+    public MdLegalConstraintsOther(BigDecimal mdLegalConstraintsId, String otherConstraints) {
+        this.mdLegalConstraintsId = mdLegalConstraintsId;
+        this.otherConstraints = otherConstraints;
+    }
+    
+    public BigDecimal getMdLegalConstraintsId() {
+        return mdLegalConstraintsId;
+    }
+
+    public void setMdLegalConstraintsId(BigDecimal mdLegalConstraintsId) {
+        this.mdLegalConstraintsId = mdLegalConstraintsId;
+    }
+
+    public String getOtherConstraints() {
+        return otherConstraints;
+    }
+
+    public void setOtherConstraints(String otherConstraints) {
+        this.otherConstraints = otherConstraints;
+    }
+    
+    
+    
+}

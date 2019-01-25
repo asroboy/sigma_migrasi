@@ -1,0 +1,288 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sigma.migrationtool;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKBReader;
+import com.vividsolutions.jts.io.WKBWriter;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Ridho
+ */
+public class Test {
+
+    static Connection conSumber, conTarget;
+    static ArrayList<HashMap<String, Object>> dataSumbers;
+
+    public static void main(String[] arg) {
+//        String wkt = "";
+//        Geometry geometry = WktWkbUtil.fromWkt(wkt);
+
+        try {
+            dataSumbers = new ArrayList<>();
+            println("Mulai");
+            getData();
+        } catch (SQLException ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void getData() throws SQLException, ParseException {
+        setupConnectionSumber();
+        String sql = "SELECT  SDO_UTIL.TO_WKBGEOMETRY(SHAPE) as SHAPE,  LOKASI, WAKBK2, STSBTS, UUPP, FCODE, WADKC2, UPDATED, TIPTBT, WAKBK1,"
+                + " TIPLOK, NAMOBJ, OBJECTID, REMARK, WAPRO2, KLBADM, WAPRO1, PJGBTS, KELAS, SRS_ID, ADMIN2, ADMIN1 , "
+                + " WAKLD1, WAKLD2, WADKC1, LCODE, KARKTR, METADATA, PELAKSANA, WADMKC, KDBBPS, WADMKD, KDEPUM, KDCPUM, WIADKK, KDPBPS,"
+                + " WIADKC, WIADKD, WADMKK, KDCBPS, KDEBPS, KDBPUM, KDPPUM, TIPADM, WIADPR, LUASWH, WADMPR"
+                + " FROM IGD.ADMINISTRASI WHERE "; //10009804 - 10009729 - 10009733
+        println(sql);
+        try (Statement stmt = conSumber.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                HashMap<String, Object> data = new HashMap<>();
+//              data.put("GEOMTYPE", rs.getString("GEOMTYPE"));
+//              data.put("SRID", rs.getString("SRID"));
+//              Geometry geometry = WktWkbUtil.fromWkb((byte[]) rs.getBytes("SHAPE"));
+//              String wkt = rs.getString("SHAPE");
+//              String replace = wkt.replace("), (", "),(");
+//              String replace = wkt.replace(",", " 0 0,");
+//              replace = wkt.replace("MULTIPOLYGON", "MULTIPOLYGON ZM"); 
+//              replace = wkt.replace("))", " 0 0))");
+
+//              println("SHAPE " + replace);
+                Geometry geometry = new WKBReader().read(rs.getBytes("SHAPE"));
+//                println("Geometry GEOM " + geometry.getGeometryType());
+                Geometry polygon = geometry.getGeometryN(0);
+//                println("GEOM type " + polygon.getGeometryType());
+                data.put("SHAPE", geometry);
+                MultiPolygon multiPolygon = (MultiPolygon) geometry;
+
+                data.put("LOKASI", rs.getString("LOKASI"));
+                data.put("WAKBK2", rs.getString("WAKBK2"));
+                data.put("STSBTS", rs.getString("STSBTS"));
+                data.put("UUPP", rs.getString("UUPP"));
+                data.put("FCODE", rs.getString("FCODE"));
+                data.put("WADKC2", rs.getString("WADKC2"));
+                data.put("UPDATED", rs.getString("UPDATED"));
+                data.put("TIPTBT", rs.getString("TIPTBT"));
+                data.put("WAKBK1", rs.getString("WAKBK1"));
+                data.put("TIPLOK", rs.getString("TIPLOK"));
+                data.put("NAMOBJ", rs.getString("NAMOBJ"));
+                data.put("OBJECTID", rs.getString("OBJECTID"));
+                data.put("REMARK", rs.getString("REMARK"));
+                data.put("WAPRO2", rs.getString("WAPRO2"));
+                data.put("KLBADM", rs.getString("KLBADM"));
+                data.put("KLBADM", rs.getString("KLBADM"));
+                data.put("WAPRO1", rs.getString("WAPRO1"));
+                data.put("PJGBTS", rs.getString("PJGBTS"));
+                data.put("KELAS", rs.getString("KELAS"));
+                data.put("SRS_ID", rs.getString("SRS_ID"));
+                data.put("ADMIN2", rs.getString("ADMIN2"));
+                data.put("ADMIN1", rs.getString("ADMIN1"));
+                data.put("WAKLD1", rs.getString("WAKLD1"));
+                data.put("WAKLD2", rs.getString("WAKLD2"));
+                data.put("WADKC1", rs.getString("WADKC1"));
+                data.put("LCODE", rs.getString("LCODE"));
+                data.put("KARKTR", rs.getString("KARKTR"));
+                data.put("METADATA", rs.getString("METADATA"));
+                data.put("PELAKSANA", rs.getString("PELAKSANA"));
+                data.put("WADMKC", rs.getString("WADMKC"));
+                data.put("KDBBPS", rs.getString("KDBBPS"));
+                data.put("WADMKD", rs.getString("WADMKD"));
+                data.put("KDEPUM", rs.getString("KDEPUM"));
+                data.put("KDCPUM", rs.getString("KDCPUM"));
+                data.put("WIADKK", rs.getString("WIADKK"));
+                data.put("KDPBPS", rs.getString("KDPBPS"));
+                data.put("WIADKC", rs.getString("WIADKC"));
+                data.put("WIADKD", rs.getString("WIADKD"));
+                data.put("WADMKK", rs.getString("WADMKK"));
+                data.put("KDCBPS", rs.getString("KDCBPS"));
+                data.put("KDEBPS", rs.getString("KDEBPS"));
+                data.put("KDBPUM", rs.getString("KDBPUM"));
+                data.put("KDPPUM", rs.getString("KDPPUM"));
+                data.put("TIPADM", rs.getString("TIPADM"));
+                data.put("WIADPR", rs.getString("WIADPR"));
+                data.put("LUASWH", rs.getString("LUASWH"));
+                data.put("WADMPR", rs.getString("WADMPR"));
+
+                dataSumbers.add(data);
+            }
+        }
+//        conSumber.close();
+
+        insert();
+    }
+
+    private static void setupConnectionSumber() {
+        println("Setup con. sumber");
+      
+        String driverName = "oracle.jdbc.OracleDriver";
+        String url = "jdbc:oracle:thin:@"
+                + "localhost"
+                + ":" + "1521"
+                + ":" + "orcl";
+
+        String username = "IGD";
+        String password = "IGD";
+        conSumber = getConnection(driverName, url, username, password);
+    }
+
+    private static void setupConnectionTarget() {
+        println("Setup con. target");
+      
+        String driverName = "oracle.jdbc.OracleDriver";
+        String url = "jdbc:oracle:thin:@//"
+                + "192.168.3.101"
+                + ":" + "1521"
+                + "/" + "IG_PUBLIKASI";
+
+        String username = "sde";
+        String password = "sde";
+        conTarget = getConnection(driverName, url, username, password);
+    }
+
+    private static void insert() throws SQLException, ParseException {
+        setupConnectionTarget();
+
+        String sqlInsert = "DECLARE "
+                + " xgeom blob; "
+                + " BEGIN "
+                + "INSERT INTO SDE.ADMINISTRASI_AR_5K (WADMKC, KDBBPS, WADMKD, KDEPUM, UUPP, KDCPUM, FCODE, UPDATED, WIADKK, NAMOBJ, OBJECTID, "
+                + "KDPBPS, WIADKC, WIADKD, WADMKK, REMARK, KDCBPS, KDEBPS, KDBPUM, SRS_ID, KDPPUM, TIPADM, WIADPR, LUASWH, SHAPE, LCODE, METADATA, "
+                + "WADMPR, PELAKSANA) VALUES (?,?,?,?,?,?,?,?,?,?,SDE.ADMINISTRASI_AR_5K.NEXTVAL,?,?,?,?,?,?,?,?,?,?,?,?,?,SDE.ST_GEOMFROMWKB(?,4326),?,?,?,?); "
+                + " END;";
+
+        println(sqlInsert);
+        PreparedStatement pstmt = conTarget.prepareStatement(sqlInsert);
+
+        int batchSize = 1;
+        int i = 0;
+        for (HashMap<String, Object> next : dataSumbers) {
+//            Geometry geom = (Geometry) next.get("SHAPE");
+//            String wkt = new WktWkbUtil().toWkt(geom);
+//            wkt = wkt.replace("ZM", "");
+//            wkt = wkt.replace("NAN", "");
+//            com.vividsolutions.jts.geom.Geometry jtsGeom = new WKTReader().read(wkt);
+
+            Geometry geom = (Geometry) next.get("SHAPE");
+            int geomNumber = geom.getNumGeometries();
+//            byte[] wktString = new WKBWriter().write(geom);
+//            println(wktString);
+
+//            ByteBuffer bbuf = ByteBuffer.allocate(wktString.length);
+//            for (int j = 0; j < geomNumber; j++) {
+//                Geometry polygon = geom.getGeometryN(j);
+//                com.esri.core.geometry.Geometry esriMultiplygon;
+                Blob blob = conTarget.createBlob();
+//            Clob clob = conTarget.createClob();
+                byte[] wktString = new WKBWriter().write(geom);
+
+                blob.setBytes(1, wktString);
+//            clob.setString(1, (String) next.get("SHAPE"));
+
+//                pstmt.setBlob(1, blob);
+                pstmt.setString(1, (String) next.get("WADMKC"));
+                pstmt.setString(2, (String) next.get("KDBBPS"));
+                pstmt.setString(3, (String) next.get("WADMKD"));
+                pstmt.setString(4, (String) next.get("KDEPUM"));
+                pstmt.setString(5, (String) next.get("UUPP"));
+                pstmt.setString(6, (String) next.get("KDCPUM"));
+                pstmt.setString(7, (String) next.get("FCODE"));
+                pstmt.setString(8, (String) next.get("UPDATED"));
+                pstmt.setString(9, (String) next.get("WIADKK"));
+                pstmt.setString(10, (String) next.get("NAMOBJ"));
+// pstmt.setString(1, (String) next.get("OBJECTID"));
+                pstmt.setString(11, (String) next.get("KDPBPS"));
+                pstmt.setString(12, (String) next.get("WIADKC"));
+                pstmt.setString(13, (String) next.get("WIADKD"));
+                pstmt.setString(14, (String) next.get("WADMKK"));
+                pstmt.setString(15, (String) next.get("REMARK"));
+                pstmt.setString(16, (String) next.get("KDCBPS"));
+                pstmt.setString(17, (String) next.get("KDEBPS"));
+                pstmt.setString(18, (String) next.get("KDBPUM"));
+                pstmt.setString(19, (String) next.get("SRS_ID"));
+                pstmt.setString(20, (String) next.get("KDPPUM"));
+                pstmt.setString(21, (String) next.get("TIPADM"));
+                pstmt.setString(22, (String) next.get("WIADPR"));
+                pstmt.setString(23, (String) next.get("LUASWH"));
+                pstmt.setBlob(24, blob);
+                pstmt.setString(25, (String) next.get("LCODE"));
+                pstmt.setString(26, (String) next.get("METADATA"));
+                pstmt.setString(27, (String) next.get("WADMPR"));
+                pstmt.setString(28, (String) next.get("PELAKSANA"));
+
+                pstmt.addBatch();
+                i++;
+                if (i % batchSize == 0) {
+                    println("Execute batch " + i);
+                    pstmt.executeBatch();
+                }
+//            }
+
+        }
+        pstmt.executeBatch();
+        println("Selesai");
+
+    }
+
+    private static void println(String message) {
+        System.out.println(message);
+    }
+
+    private static void print(String message) {
+        System.out.print(message);
+    }
+    
+    
+    private static Connection getConnection(String driverName, String url, String username, String password) {
+        try {
+//            "oracle.jdbc.driver.OracleDriver"
+            Class.forName(driverName);
+
+        } catch (ClassNotFoundException e) {
+
+            System.out.println("Where is your Oracle JDBC Driver?");
+            e.printStackTrace();
+            return null;
+
+        }
+
+//        System.out.println("Oracle JDBC Driver Registered!");
+        Connection connection = null;
+
+        try {
+            // url = "jdbc:oracle:thin:@localhost:1521:orcl"
+            //username = "system";
+            //password = "root123";
+            connection = DriverManager.getConnection(
+                    url, username, password
+            );
+        } catch (SQLException e) {
+            System.out.println("Connection Failed! Check output console");
+            e.printStackTrace();
+            return null;
+
+        }
+
+        return connection;
+    }
+    
+}

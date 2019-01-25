@@ -1,0 +1,236 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtilXml;
+import domain.ExGeographicBoundingBox;
+import java.math.BigDecimal;
+import java.util.List;
+import model.table.ExGeographicBoundingBoxModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author wallet
+ */
+public class ExGeographicBoundingBoxController {
+
+    public ExGeographicBoundingBoxController() {
+
+    }
+    HibernateUtilXml hibernateUtilXml;
+    Session session;
+
+    public ExGeographicBoundingBoxController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.hibernateUtilXml = hibernateUtilXml;
+        this.session = session;
+    }
+
+    public BigDecimal getMaxExGeographicBoundingBoxId() {
+
+        BigDecimal maxId = null;
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(ExGeographicBoundingBox.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((ExGeographicBoundingBox) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        //session.close();
+
+        return maxId;
+    }
+
+    public ExGeographicBoundingBox getDataById(BigDecimal Id) {
+
+        ExGeographicBoundingBox exGeographicBoundingBox = new ExGeographicBoundingBox();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(ExGeographicBoundingBox.class);
+            criteria.add(Restrictions.eq("id", Id));
+            exGeographicBoundingBox = (ExGeographicBoundingBox) criteria.uniqueResult();
+
+            if (exGeographicBoundingBox == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+
+        return exGeographicBoundingBox;
+    }
+    
+     public ExGeographicBoundingBox getDataByIdExExGeographicExtent(BigDecimal Id) {
+        
+        ExGeographicBoundingBox exGeographicBoundingBox = new ExGeographicBoundingBox();
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(ExGeographicBoundingBox.class);
+            criteria.add(Restrictions.eq("exGeographicExtentId", Id));
+            exGeographicBoundingBox = (ExGeographicBoundingBox) criteria.uniqueResult();
+
+            if (exGeographicBoundingBox == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally { 
+            //session.close();
+        }
+
+        return exGeographicBoundingBox;
+    }
+    
+    public String deletedExGeographicBoundingBox(BigDecimal Id) {
+        
+        ExGeographicBoundingBox exGeographicBoundingBox = new ExGeographicBoundingBox();
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(ExGeographicBoundingBox.class);
+            criteria.add(Restrictions.eq("id", Id));
+            exGeographicBoundingBox = (ExGeographicBoundingBox) criteria.uniqueResult();
+
+            session.delete(exGeographicBoundingBox);
+            trx.commit();
+            
+            return "berhasil dihapus......!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally { 
+            //session.close();
+        }
+    }
+
+    public String saveExGeographicBoundingBox(ExGeographicBoundingBoxModel extentModel) {
+
+        ExGeographicBoundingBox exGeographicBoundingBox = new ExGeographicBoundingBox();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            exGeographicBoundingBox.setId(extentModel.getId());
+            exGeographicBoundingBox.setEastBoundLongitude(extentModel.getEastBoundLongitude());
+            exGeographicBoundingBox.setNorthBoundLongitude(extentModel.getNorthBoundLongitud());
+            exGeographicBoundingBox.setSouthBoundLongitude(extentModel.getSouthBoundLongitude());
+            exGeographicBoundingBox.setWestBoundLongitude(extentModel.getWestBoundLongitude());
+            exGeographicBoundingBox.setExGeographicExtentId(extentModel.getExGeographicExtentId());
+
+            session.save(exGeographicBoundingBox);
+            trx.commit();
+
+            return "berhasil disimpan.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+
+    public String updateExGeographicBoundingBox(ExGeographicBoundingBoxModel mdModel) {
+
+        ExGeographicBoundingBox exGeographicBoundingBox = new ExGeographicBoundingBox();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(ExGeographicBoundingBox.class);
+            criteria.add(Restrictions.eq("exGeographicExtentId", mdModel.getExGeographicExtentId()));
+            exGeographicBoundingBox = (ExGeographicBoundingBox) criteria.uniqueResult();
+
+            exGeographicBoundingBox.setEastBoundLongitude(mdModel.getEastBoundLongitude());
+            exGeographicBoundingBox.setNorthBoundLongitude(mdModel.getNorthBoundLongitud());
+            exGeographicBoundingBox.setSouthBoundLongitude(mdModel.getSouthBoundLongitude());
+            exGeographicBoundingBox.setWestBoundLongitude(mdModel.getWestBoundLongitude());
+
+            session.update(exGeographicBoundingBox);
+            trx.commit();
+
+            return "berhasil diubah.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+
+}

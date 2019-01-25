@@ -1,0 +1,285 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sigma.big.utils;
+
+import com.esri.core.geometry.ogc.OGCLineString;
+import com.esri.core.geometry.ogc.OGCMultiLineString;
+import com.esri.core.geometry.ogc.OGCMultiPoint;
+import com.esri.core.geometry.ogc.OGCMultiPolygon;
+import com.esri.core.geometry.ogc.OGCPoint;
+import com.esri.core.geometry.ogc.OGCPolygon;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+import java.math.BigDecimal;
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Struct;
+import java.util.ArrayList;
+import oracle.spatial.geometry.JGeometry;
+import org.apache.commons.lang3.ArrayUtils;
+import org.geotools.data.oracle.sdo.SDO;
+import org.geotools.geometry.jts.LiteCoordinateSequenceFactory;
+
+/**
+ *
+ * @author Ridho
+ */
+public class ConverterUtil {
+
+    public JGeometry esriOgcPointToJGeometry(OGCPoint point) {
+//        int dim = 2;
+        int dim = point.coordinateDimension();
+        if (dim > 2) {
+            dim = 3;
+        }
+        double[] doubles = new double[dim];
+        doubles[0] = point.X();
+        doubles[1] = point.Y();
+        if (dim > 2) {
+            doubles[2] = point.Z();
+        }else{
+            doubles[2] = 0.0;
+        }
+        JGeometry jGeom = JGeometry.createPoint(doubles, dim, point.SRID());
+        return jGeom;
+    }
+
+    public JGeometry esriOgcMultiPointToJGeometry(OGCMultiPoint multiPoint) {
+        int numPoints = multiPoint.numGeometries();
+//        int dim = 2;
+        int dim = multiPoint.coordinateDimension();
+        if (dim > 2) {
+            dim = 3;
+        }
+        ArrayList<Double[]> d = new ArrayList<>();
+        for (int i = 0; i < numPoints; i++) {
+            OGCPoint point = (OGCPoint) multiPoint.geometryN(i);
+            Double[] dd = new Double[dim];
+            dd[0] = point.X();
+            dd[1] = point.Y();
+            if (dim > 2) {
+                dd[2] = point.Z();
+            }else{
+                dd[2] = 0.0;
+            }
+            d.add(dd);
+        }
+        Object[] doubles_ = d.toArray(new Object[d.size()]);
+        JGeometry jGeom = JGeometry.createMultiPoint(doubles_, dim, multiPoint.SRID());
+        return jGeom;
+    }
+
+    public JGeometry esriOgcLineStringtoJGeometry(OGCLineString lineString) {
+        int numPoints = lineString.numPoints();
+        int dim = lineString.coordinateDimension();
+        if (dim > 2) {
+            dim = 3;
+        }
+//        int dim = 2;
+        ArrayList<Double> d = new ArrayList<>();
+        for (int i = 0; i < numPoints; i++) {
+            OGCPoint pointInLine = lineString.pointN(i);
+            d.add(pointInLine.X());
+            d.add(pointInLine.Y());
+            if (pointInLine.coordinateDimension() > 2) {
+                d.add(pointInLine.Z());
+            } else {
+                d.add(0.0);
+            }
+        }
+        Double[] doubles_ = d.toArray(new Double[d.size()]);
+        double[] doubles = ArrayUtils.toPrimitive(doubles_);
+        JGeometry jGeom = JGeometry.createLinearLineString(doubles, dim, lineString.SRID());
+        return jGeom;
+    }
+
+    public JGeometry esriOgcMultiLineStringtoJGeometry(OGCMultiLineString multiLineString) {
+        int jumlahLine = multiLineString.numGeometries();
+       
+        Object[] coords = new Object[jumlahLine];
+        for (int i = 0; i < jumlahLine; i++) {
+            ArrayList<Double> d = new ArrayList<>();
+            OGCLineString lineStringInMultiLine = (OGCLineString) multiLineString.geometryN(i);
+            int jumlahPoint = lineStringInMultiLine.numPoints();
+            for (int z = 0; z < jumlahPoint; z++) {
+                OGCPoint pointInLine = lineStringInMultiLine.pointN(z);
+                d.add(pointInLine.X());
+                d.add(pointInLine.Y());
+                if (pointInLine.coordinateDimension() > 2) {
+                    d.add(pointInLine.Z());
+                } else {
+                    d.add(0.0);
+                }
+            }
+
+            Double[] doubles_ = d.toArray(new Double[d.size()]);
+            double[] doubles = ArrayUtils.toPrimitive(doubles_);
+            coords[i] = doubles;
+        }
+
+//        int dim = 2;
+        int dim = multiLineString.coordinateDimension();
+        if (dim > 2) {
+            dim = 3;
+        }
+        JGeometry jGeom = JGeometry.createLinearMultiLineString(coords, dim, multiLineString.SRID());
+        return jGeom;
+    }
+
+    public JGeometry esrOgcPolygonToPolygon(OGCPolygon polygon) {
+        OGCLineString exterior = polygon.exteriorRing();
+        int jumlahPoint = exterior.numPoints();
+        ArrayList<Double> d = new ArrayList<>();
+        for (int z = 0; z < jumlahPoint; z++) {
+            OGCPoint pointInLine = exterior.pointN(z);
+            d.add(pointInLine.X());
+            d.add(pointInLine.Y());
+            if (pointInLine.coordinateDimension() > 2) {
+                d.add(pointInLine.Z());
+            } else {
+                d.add(0.0);
+            }
+        }
+        Double[] doubles_ = d.toArray(new Double[d.size()]);
+        double[] coords = ArrayUtils.toPrimitive(doubles_);
+//        int dim = 2;
+        int dim = polygon.coordinateDimension();
+        if (dim > 2) {
+            dim = 3;
+        }
+        JGeometry jGeom = JGeometry.createLinearPolygon(coords, dim, polygon.SRID());
+        return jGeom;
+    }
+
+    public MultiPolygon esrOgcMultiPolygonToPolygon(OGCMultiPolygon multiPolygon) {
+        int numPolygonInside = multiPolygon.numGeometries();
+        com.vividsolutions.jts.geom.GeometryFactory gf = new GeometryFactory();
+        Polygon[] polygons = new Polygon[numPolygonInside];
+        for (int i = 0; i < numPolygonInside; i++) {
+            ArrayList<Coordinate[]> coordinates = new ArrayList<>();
+            OGCPolygon polygon = (OGCPolygon) multiPolygon.geometryN(i);
+            OGCLineString exterior = polygon.exteriorRing();
+            int jumlahPoint = exterior.numPoints();
+            Coordinate[] coords = new Coordinate[jumlahPoint];
+            for (int z = 0; z < jumlahPoint; z++) {
+                OGCPoint pointInLine = exterior.pointN(z);
+                Coordinate coord;
+                if (pointInLine.coordinateDimension() > 2) {
+                    coord = new Coordinate(pointInLine.X(), pointInLine.Y(), pointInLine.Z());
+                } else {
+                    coord = new Coordinate(pointInLine.X(), pointInLine.Y(), 0.0);
+                }
+                coords[z] = coord;
+
+            }
+
+            coordinates.add(coords);
+
+            Polygon polygon1 = null;
+            //JIKA POLYGON MEMPUNYAI RING
+            if (polygon.numInteriorRing() > 0) {
+                LinearRing[] holes = new LinearRing[polygon.numInteriorRing()];
+                for (int j = 0; j < polygon.numInteriorRing(); j++) {
+                    OGCLineString interior = polygon.interiorRingN(j);
+                    int jumlahPoint_ = interior.numPoints();
+                    Coordinate[] interiorCoords = new Coordinate[jumlahPoint_];
+                    Coordinate coord;
+                    for (int z = 0; z < jumlahPoint_; z++) {
+                        OGCPoint pointInLine = interior.pointN(z);
+                        if (pointInLine.coordinateDimension() > 2) {
+                            coord = new Coordinate(pointInLine.X(), pointInLine.Y(), pointInLine.Z());
+                        } else {
+                            coord = new Coordinate(pointInLine.X(), pointInLine.Y(), 0.0);
+                        }
+                        interiorCoords[z] = coord;
+                    }
+                    holes[j] = gf.createLinearRing(interiorCoords);
+                    coordinates.add(interiorCoords);
+                }
+                polygon1 = gf.createPolygon(gf.createLinearRing(coords), holes);
+            }
+
+            polygon1 = gf.createPolygon(coords);
+            polygon1.setSRID(multiPolygon.SRID());
+            polygons[i] = polygon1;
+        }
+        MultiPolygon multiPolygon_jts = new MultiPolygon(polygons, gf);
+        multiPolygon_jts.setSRID(multiPolygon.SRID());
+        return multiPolygon_jts;
+    }
+
+    public String getBoundingBox(Statement stmt, String skema, String namaUnsur) throws SQLException {
+        ResultSet rs = stmt.executeQuery("SELECT MDSYS.SDO_AGGR_MBR(SHAPE) AS BOUNDING_BOX FROM " + skema + "." + namaUnsur + "");
+        BigDecimal xMin = null, yMin = null, xMax = null, yMax = null, zMin = null, zMax = null;
+        while (rs.next()) {
+            Struct bBoxx = (Struct) rs.getObject("BOUNDING_BOX");
+            Array b = ((Array) bBoxx.getAttributes()[4]);
+
+            BigDecimal[] xyz = (BigDecimal[]) b.getArray();
+
+            for (int i = 0; i < xyz.length; i++) {
+                xMin = xyz[0];
+                yMin = xyz[1];
+                xMax = xyz[2];
+                yMax = xyz[3];
+                if (xyz.length > 4) {
+                    zMin = xyz[4];
+                    zMax = xyz[5];
+                } else {
+                    zMin = BigDecimal.valueOf(0.0);
+                    zMax = BigDecimal.valueOf(0.0);
+                }
+            }
+        }
+
+        String bBox;
+        if (zMin == null) {
+            bBox = "SDO_DIM_ARRAY(SDO_DIM_ELEMENT('X', " + xMin + ", " + xMax + ", 0.005), "
+                    + "SDO_DIM_ELEMENT('Y', " + yMin + ", " + yMax + ", 0.005))";
+        } else {
+            bBox = "SDO_DIM_ARRAY(SDO_DIM_ELEMENT('X', " + xMin + ", " + xMax + ", 0.005), "
+                    + "SDO_DIM_ELEMENT('Y', " + yMin + ", " + yMax + ", 0.005),"
+                    + "SDO_DIM_ELEMENT('Z', " + zMin + ", " + zMax + ", 0.005))";
+        }
+
+        return bBox;
+
+    }
+
+    public static JGeometry toJGeometry(Geometry geom, int srid) {
+        if (geom == null) {
+            throw new IllegalArgumentException("Cannot handle null geometries");
+        }
+
+        int gtype = SDO.gType(geom);
+        double[] point = SDO.point(geom);
+        if (point != null) {
+            if (geom.getDimension() > 2) {
+                return new JGeometry(point[0], point[1], point[2], srid);
+            } else {
+                return new JGeometry(point[0], point[1], srid);
+            }
+        } else {
+            int[] elemInfo = SDO.elemInfo(geom);
+            double[] ordinates = SDO.ordinates(geom);
+            return new JGeometry(gtype, srid, elemInfo, ordinates);
+        }
+    }
+
+    public static Geometry toJTS(GeometryFactory gf, JGeometry geom) {
+        int dimensions = geom.getDimensions();
+        int lrs = geom.isLRSGeometry() ? dimensions : 0;
+        int gtype = dimensions * 1000 + lrs * 100 + geom.getType();
+        return SDO.create(gf, gtype, geom.getSRID(), geom.getPoint(), geom.getElemInfo(), geom.getOrdinatesArray());
+    }
+
+}

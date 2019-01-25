@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="domain.MetadataCustom" table="metadata_custom" schema="METADATA">
+        <property name="id" type="big_decimal">
+            <column name="ID"  precision="22" scale="0" />
+        </property>
+        <id name="fileIdentifier" type="string">
+            <column name="FILEIDENTIFIER" length="500" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="language" type="string">
+            <column name="LANGUAGE"  length="200" />
+        </property>
+         <property name="characterSet" type="string">
+            <column name="CHARACTERSET"  length="500" />
+        </property>
+         <property name="hierarchyLevel" type="string">
+            <column name="HIERARCHYLEVEL"  length="200" />
+        </property>
+         <property name="hierarchyLevelName" type="string">
+            <column name="HIERARCHYLEVELNAME"  length="200" />
+        </property>
+         <property name="individualName" type="string">
+            <column name="INDIVIDUALNAME"  length="200" />
+        </property>
+         <property name="organisationName" type="string">
+            <column name="ORGANISATIONNAME"  length="300" />
+        </property>
+         <property name="positionName" type="string">
+            <column name="POSITIONNAME"  length="200" />
+        </property>
+         <property name="voice" type="string">
+            <column name="VOICE"  length="200" />
+        </property>
+         <property name="facsimile" type="string">
+            <column name="FACSIMILE"  length="200" />
+        </property>
+         <property name="deliveryPoint" type="string">
+            <column name="DELIVERYPOINT"  length="300" />
+        </property>
+         <property name="city" type="string">
+            <column name="CITY"  length="200" />
+        </property>
+         <property name="administrativeArea" type="string">
+            <column name="ADMINISTRATIVEAREA"  length="200" />
+        </property>
+         <property name="postalCode" type="string">
+            <column name="POSTALCODE"  length="200" />
+        </property>
+         <property name="country" type="string">
+            <column name="COUNTRY"  length="200" />
+        </property>
+         <property name="electronicMailAddress" type="string">
+            <column name="ELECTRONICMAILADDRESS"  length="200" />
+        </property>
+         <property name="linkage" type="string">
+            <column name="LINKAGE"  length="200" />
+        </property>
+         <property name="language" type="string">
+            <column name="LANGUAGE"  length="200" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME"  length="300" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION"  length="800" />
+        </property>
+        <property name="function" type="string">
+            <column name="FUNCTION"  length="200" />
+        </property>
+        <property name="role" type="string">
+            <column name="ROLE"  length="200" />
+        </property>
+        <property name="dateStamp" type="date">
+            <column name="DATESTAMP"  length="7" not-null="true"/>
+        </property>
+        <property name="metadataStandardName" type="string">
+            <column name="METADATASTANDARDNAME"  length="200" />
+        </property>
+        <property name="metadataStandardVersion" type="string">
+            <column name="METADATASTANDARDVERSION"  length="200" />
+        </property>
+        <property name="dataSetUri" type="string">
+            <column name="DATASETURI"  length="1000" />
+        </property>
+        <property name="codeSpace" type="string">
+            <column name="CODESPACE"  length="200" />
+        </property>
+        <property name="version" type="string">
+            <column name="VERSION"  length="200" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE"  length="300" />
+        </property>
+        <property name="language" type="string">
+            <column name="LANGUAGE"  length="200" />
+        </property>
+        <property name="alternateTitle" type="string">
+            <column name="ALTERNATETITLE"  length="300" />
+        </property>
+        <property name="ciDate" type="date">
+            <column name="CI_DATE"  length="7" not-null="true"/>
+        </property>
+        <property name="edition" type="string">
+            <column name="EDITION"  length="200" />
+        </property>
+         <property name="abstract" type="string">
+            <column name="ABSTRACT"  length="2000" />
+        </property>
+         <property name="keyword" type="string">
+            <column name="KEYWORD"  length="200" />
+        </property>
+         <property name="type" type="string">
+            <column name="TYPE"  length="200" />
+        </property>
+         <property name="spesificUsage" type="string">
+            <column name="SPECIFICUSAGE"  length="300" />
+        </property>
+         <property name="spatialRepresentationType" type="string">
+            <column name="SPATIALREPRESENTATIONTYPE"  length="300" />
+        </property>
+         <property name="spatialResolution" type="string">
+            <column name="SPATIALRESOLUTION"  length="300" />
+        </property>
+         <property name="topicCategory" type="string">
+            <column name="TOPICCATEGORY"  length="200" />
+        </property>
+         <property name="extentTypeCode" type="string">
+            <column name="EXTENTTYPECODE"  length="200" />
+        </property>
+         <property name="westBoundLongitude" type="string">
+            <column name="WESTBOUNDLONGITUDE"  length="200" />
+        </property>
+         <property name="eastBoundLongitude" type="string">
+            <column name="EASTBOUNDLONGITUDE"  length="200" />
+        </property>
+         <property name="southBoundLatitude" type="string">
+            <column name="SOUTHBOUNDLATITUDE"  length="200" />
+        </property>
+         <property name="northBoundLatitude" type="string">
+            <column name="NORTHBOUNDLATITUDE"  length="200" />
+        </property>
+         <property name="useLimitation" type="string">
+            <column name="USELIMITATION"  length="300" />
+        </property>
+         <property name="maintenanceAndUpdateFrequency" type="string">
+            <column name="MAINTENANCEANDUPDATEFREQUENCY"  length="400" />
+        </property>
+         <property name="updateScope" type="string">
+            <column name="UPDATESCOPE"  length="300" />
+        </property>
+         <property name="updateScopeDescription" type="string">
+            <column name="UPDATESCOPEDESCRIPTION"  length="500" />
+        </property>
+         <property name="maintenanceNote" type="string">
+            <column name="MAINTENANCENOTE"  length="200" />
+        </property>
+        <property name="graphicOverview" type="string">
+            <column name="GRAPHICOVERVIEW"  length="255" />
+        </property>
+        <property name="xmlFileName" type="string">
+            <column name="XMLFILENAME"  length="255" />
+        </property>
+        <property name="harvestId" type="big_decimal">
+            <column name="HARVESTID"  precision="22" scale="0"/>
+        </property>
+        <property name="securityConstraints" type="string">
+            <column name="SECURITYCONSTRAINTS"  length="1" />
+        </property>
+        <property name="securityConstraintsGroup" type="string">
+            <column name="SECURITYCONSTRAINTSGROUP"  length="1000" />
+        </property>
+    </class>
+
+</hibernate-mapping>

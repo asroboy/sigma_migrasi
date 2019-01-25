@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<hibernate-configuration>
+  <session-factory>
+<!--    <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@//192.168.3.101:1521/produksisdo</property>
+    <property name="hibernate.connection.username">metadata</property>
+    <property name="hibernate.connection.password">oracle</property>
+    <property name="show_sql">false</property>
+    <property name="hbm2ddl.auto">update</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+    <property name="format_sql">true</property>-->
+    <mapping resource="domain/PtLocale.hbm.xml"/>
+    <mapping resource="domain/MdMetadata.hbm.xml"/>
+    <mapping resource="domain/MdCharactersetCode.hbm.xml"/>
+    <mapping resource="domain/MdScopecode.hbm.xml"/>
+    <mapping resource="domain/MdMetadataHierarchylv.hbm.xml"/>
+    <mapping resource="domain/MdMetadataHierarchylvName.hbm.xml"/>
+    <mapping resource="domain/CiRoleCode.hbm.xml"/>
+    <mapping resource="domain/CiResponsibleParty.hbm.xml"/>
+    <mapping resource="domain/CiContact.hbm.xml"/>
+    <mapping resource="domain/CiTelephone.hbm.xml"/>
+    <mapping resource="domain/CiTelephoneVoice.hbm.xml"/>
+    <mapping resource="domain/CiTelephoneFacsimile.hbm.xml"/>
+    <mapping resource="domain/CiAddress.hbm.xml"/>
+    <mapping resource="domain/CiAddressDeliveryPoint.hbm.xml"/>
+    <mapping resource="domain/CiAddressEmailAddress.hbm.xml"/>
+    <mapping resource="domain/MdReferenceSystem.hbm.xml"/>
+    <mapping resource="domain/MdIdentifier.hbm.xml"/>
+    <mapping resource="domain/RsIdentifier.hbm.xml"/>
+    <mapping resource="domain/CiCitation.hbm.xml"/>
+    <mapping resource="domain/MdMaintenanceFrequencyCode.hbm.xml"/>
+    <mapping resource="domain/MdMaintenanceInfo.hbm.xml"/>
+    <mapping resource="domain/MdContentInfo.hbm.xml"/>
+    <mapping resource="domain/MdCoverageContentTypeCode.hbm.xml"/>
+    <mapping resource="domain/MdCoverageDescription.hbm.xml"/>
+    <mapping resource="domain/MdPortrayalCatalogueRef.hbm.xml"/>
+    <mapping resource="domain/CiCitationAlternateTitle.hbm.xml"/>
+    <mapping resource="domain/CiDate.hbm.xml"/>
+    <mapping resource="domain/CiDateTypeCode.hbm.xml"/>
+    <mapping resource="domain/MdSpatialRepresentTypeCode.hbm.xml"/>
+    <mapping resource="domain/MdSpatialRepresentation.hbm.xml"/>
+    <mapping resource="domain/MdTopologyLevelCode.hbm.xml"/>
+    <mapping resource="domain/MdVectorSpatialRepresentation.hbm.xml"/>
+    <mapping resource="domain/MdGeometricObjectTypeCode.hbm.xml"/>
+    <mapping resource="domain/MdGeometricObjects.hbm.xml"/>
+    <mapping resource="domain/MdIdentification.hbm.xml"/>
+    <mapping resource="domain/MdProgressCode.hbm.xml"/>
+    <mapping resource="domain/MdIdentificationStatus.hbm.xml"/>
+    <mapping resource="domain/MdBrowseGraphic.hbm.xml"/>
+    <mapping resource="domain/MdFormat.hbm.xml"/>
+    <mapping resource="domain/MdDistributor.hbm.xml"/>
+    <mapping resource="domain/MdDigitalTransferOptions.hbm.xml"/>
+    <mapping resource="domain/CiOnlineFunctionCode.hbm.xml"/>
+    <mapping resource="domain/CiOnlineResource.hbm.xml"/>
+    <mapping resource="domain/MdMediumNameCode.hbm.xml"/>
+    <mapping resource="domain/MdMedium.hbm.xml"/>
+    <mapping resource="domain/MdKeywordTypeCode.hbm.xml"/>
+    <mapping resource="domain/MdKeyword.hbm.xml"/>
+    <mapping resource="domain/MdKeywordKeyword.hbm.xml"/>
+    <mapping resource="domain/MdConstraints.hbm.xml"/>
+    <mapping resource="domain/MdConstraintsUseLimitation.hbm.xml"/>
+    <mapping resource="domain/DsInitiativeTypeCode.hbm.xml"/>
+    <mapping resource="domain/DsAssociationTypeCode.hbm.xml"/>
+    <mapping resource="domain/MdAggregateInfo.hbm.xml"/>
+<!--<mapping resource="domain/SvServiceIdentification.hbm.xml"/>-->
+    <mapping resource="domain/MdDataIdentification.hbm.xml"/>   
+    <mapping resource="domain/MdDataIdentificationSpatrep.hbm.xml"/>
+    <mapping resource="domain/MdDataIdentificationCharset.hbm.xml"/>
+    <mapping resource="domain/MdDataIdentificationLang.hbm.xml"/>
+    <mapping resource="domain/MdTopicCategoryCode.hbm.xml"/>
+    <mapping resource="domain/MdDataIdentificationTopcat.hbm.xml"/>
+    <mapping resource="domain/MdResolution.hbm.xml"/>
+    <mapping resource="domain/MdRepresentativeFraction.hbm.xml"/>
+    <mapping resource="domain/ExExtent.hbm.xml"/>
+    <mapping resource="domain/ExGeographicExtent.hbm.xml"/>
+    <mapping resource="domain/ExGeographicBoundingBox.hbm.xml"/>
+    <mapping resource="domain/MdUploadFile.hbm.xml"/>
+    <mapping resource="domain/DqDataQuality.hbm.xml"/>
+    <mapping resource="domain/DqScope.hbm.xml"/>
+    <mapping resource="domain/LiLineage.hbm.xml"/>
+    <mapping resource="domain/LiProcessStep.hbm.xml"/>
+    <mapping resource="domain/LiSource.hbm.xml"/>
+    <mapping resource="domain/DqCompleteness.hbm.xml"/>
+    <mapping resource="domain/DqCompComm.hbm.xml"/>
+    <mapping resource="domain/DqEvaluationMethodTypeCode.hbm.xml"/>
+    <mapping resource="domain/DqElement.hbm.xml"/>
+    <mapping resource="domain/DqElementNameOfMeasure.hbm.xml"/>
+    <mapping resource="domain/DqElementDateTime.hbm.xml"/>
+    <mapping resource="domain/DqResult.hbm.xml"/>
+    <mapping resource="domain/DqConformanceResult.hbm.xml"/>
+    <mapping resource="domain/DqQuantitativeResult.hbm.xml"/>
+    <mapping resource="domain/DqQuantitativeResultValue.hbm.xml"/>
+    <mapping resource="domain/DqComPom.hbm.xml"/>
+    <mapping resource="domain/DqLogicalConsistency.hbm.xml"/>
+    <mapping resource="domain/DqConcconsis.hbm.xml"/>
+    <mapping resource="domain/DqDomconsis.hbm.xml"/>
+    <mapping resource="domain/DqFormConsis.hbm.xml"/>
+    <mapping resource="domain/DqTopConsis.hbm.xml"/>
+    <mapping resource="domain/DqPositionalAccuracy.hbm.xml"/>
+    <mapping resource="domain/DqAbsextposacc.hbm.xml"/>
+    <mapping resource="domain/DqGridDataPosAcc.hbm.xml"/>
+    <mapping resource="domain/DqRellntPosAcc.hbm.xml"/>
+    <mapping resource="domain/DqTemporalAccuracy.hbm.xml"/>
+    <mapping resource="domain/DqAccTimeMeAs.hbm.xml"/>
+    <mapping resource="domain/DqTempConsis.hbm.xml"/>
+    <mapping resource="domain/DqTempValid.hbm.xml"/>
+    <mapping resource="domain/DqThematicAccuracy.hbm.xml"/>
+    <mapping resource="domain/DqThemClassCor.hbm.xml"/>
+    <mapping resource="domain/DqNonQuanAttacc.hbm.xml"/>
+    <mapping resource="domain/DqQuanAttac.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

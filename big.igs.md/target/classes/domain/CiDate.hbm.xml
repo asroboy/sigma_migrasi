@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 20, 2017 9:23:58 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="domain.CiDate" table="CI_DATE" schema="METADATA">
+        <id name="id" type="big_decimal">
+            <column name="ID"  precision="22" scale="0" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="date_" type="date">
+            <column name="DATE_" length="7" />
+        </property>
+        <property name="dateType" type="string">
+            <column name="DATETYPE"  length="3" />
+        </property>
+        <property name="ciCitationId" type="big_decimal">
+            <column name="CI_CITATIONID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

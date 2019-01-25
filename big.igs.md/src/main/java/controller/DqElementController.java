@@ -1,0 +1,353 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtil;
+import config.HibernateUtilXml;
+import domain.DqElement;
+import java.math.BigDecimal;
+import java.util.List;
+import model.table.DqElementModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author wallet
+ */
+public class DqElementController {
+    
+    Session session;
+    HibernateUtilXml hibernateUtilXml;
+
+    public DqElementController() {
+    }
+
+    public DqElementController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.session = session;
+        this.hibernateUtilXml = hibernateUtilXml;
+    }   
+    
+    public BigDecimal getMaxDqElementId() {
+       
+        BigDecimal maxId = null;
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {          
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+                        
+            Criteria criteria = session.createCriteria(DqElement.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((DqElement) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        //session.close();
+        
+        return maxId;
+    }
+    
+    public DqElementModel getRelationalId(String columnName,BigDecimal dqId){
+        
+        DqElementModel dqElementModel = new DqElementModel();
+        
+        switch(columnName){
+            
+            case "DQ_COMPCOMMID":
+                dqElementModel.setDqCompCommId(dqId);
+                break;
+            case "DQ_COMPOMID":
+                dqElementModel.setDqCompOmId(dqId);
+                break;
+            case "DQ_CONCCONSISID":
+                dqElementModel.setDqConcConsisId(dqId);
+                break;
+            case "DQ_DOMCONSISID":
+                dqElementModel.setDqDomConsisId(dqId);
+                break;
+            case "DQ_FORMCONSISID":
+                dqElementModel.setDqFormConsisId(dqId);
+                break;
+            case "DQ_TOPCONSISID":
+                dqElementModel.setDqTopConsisId(dqId);
+                break;
+            case "DQ_ABSEXTPOSACCID":
+                dqElementModel.setDqAbsExtPosAccId(dqId);
+                break;
+            case "DQ_GRIDDATAPOSACCID":
+                dqElementModel.setDqGridDataPosAccId(dqId);
+                break;
+            case "DQ_RELLNTPOSACCID":
+                dqElementModel.setDqRellNtPosAccId(dqId);
+                break;
+            case "DQ_ACCTIMEMEASID":
+                dqElementModel.setDqAccTimeMeAsId(dqId);
+                break;
+            case "DQ_TEMPCONSISID":
+                dqElementModel.setDqTempConsisId(dqId);
+                break;
+            case "DQ_TEMPVALIDID":
+                dqElementModel.setDqTempValidId(dqId);
+                break;
+            case "DQ_THEMCLASSCORID":
+                dqElementModel.setDqThemClassCorId(dqId);
+                break;
+            case "DQ_NONQUANATTACCID":
+                dqElementModel.setDqNonQuanAttaccId(dqId);
+                break;
+            case "DQ_QUANATTACCID":
+                dqElementModel.setDqQuanAttaccId(dqId);
+                break;
+        }
+        
+        return dqElementModel;
+        
+    }
+     
+    public String getRelationalId(String columnName){
+        
+        String name = null;
+        
+        switch(columnName){
+            
+            case "DQ_COMPCOMMID":
+                name="dqCompCommId";
+                break;
+            case "DQ_COMPOMID":
+                name="dqCompOmId";
+                break;
+            case "DQ_CONCCONSISID":
+                name="dqConcConsisId";
+                break;
+            case "DQ_DOMCONSISID":
+                name="dqDomConsisId";
+                break;
+            case "DQ_FORMCONSISID":
+                name="dqFormConsisId";
+                break;
+            case "DQ_TOPCONSISID":
+                name="dqTopConsisId";
+                break;
+            case "DQ_ABSEXTPOSACCID":
+                name="dqAbsExtPosAccId";
+                break;
+            case "DQ_GRIDDATAPOSACCID":
+                name="dqGridDataPosAccId";
+                break;
+            case "DQ_RELLNTPOSACCID":
+                name="dqRellNtPosAccId";
+                break;
+            case "DQ_ACCTIMEMEASID":
+                name="dqAccTimeMeAsId";
+                break;
+            case "DQ_TEMPCONSISID":
+                name="dqTempConsisId";
+                break;
+            case "DQ_TEMPVALIDID":
+                name="dqTempValidId";
+                break;
+            case "DQ_THEMCLASSCORID":
+                name="dqThemClassCorId";
+                break;
+            case "DQ_NONQUANATTACCID":
+                name="dqNonQuanAttaccId";
+                break;
+            case "DQ_QUANATTACCID":
+                name="dqQuanAttaccId";
+                break;
+        }
+        
+        return name;
+        
+    }
+    
+    public DqElement getDataById(BigDecimal id,String ColumnName) {
+        DqElement dq = new DqElement();
+        
+       // String truthName;
+       // truthName = getRelationalId(ColumnName);
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(DqElement.class);
+            criteria.add(Restrictions.eq(ColumnName, id));
+            dq = (DqElement) criteria.uniqueResult();
+
+            if (dq == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally { 
+            //session.close();
+        }
+
+        return dq;
+    }
+    
+    public String deletedDqElement(BigDecimal id) {
+        DqElement dq = new DqElement();
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(DqElement.class);
+            criteria.add(Restrictions.eq("id", id));
+            dq = (DqElement) criteria.uniqueResult();
+
+            session.delete(dq);
+            trx.commit();
+            
+            return "berhasil dihapus......!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally { 
+            //session.close();
+        }
+    }
+    
+    public String saveDqElement(DqElementModel mdModel) {
+       
+        DqElement dq = new DqElement();
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            dq.setId(mdModel.getId());
+            dq.setEvaluationMethodDescription(mdModel.getEvaluationMethodDescription());
+            dq.setEvaluationMethodType(mdModel.getEvaluationMethodType());
+            dq.setExtendsType(mdModel.getExtendsType());
+            dq.setMeasureDescription(mdModel.getMeasureDescription());
+            dq.setDqAbsExtPosAccId(mdModel.getDqAbsExtPosAccId());
+            dq.setDqAccTimeMeAsId(mdModel.getDqAccTimeMeAsId());
+            dq.setDqCompCommId(mdModel.getDqCompCommId());
+            dq.setDqCompOmId(mdModel.getDqCompOmId());
+            dq.setDqConcConsisId(mdModel.getDqConcConsisId());
+            dq.setDqDataQualityId(mdModel.getDqDataQualityId());
+            dq.setDqDomConsisId(mdModel.getDqDomConsisId());
+            dq.setDqFormConsisId(mdModel.getDqFormConsisId());
+            dq.setDqGridDataPosAccId(mdModel.getDqGridDataPosAccId());
+            dq.setDqNonQuanAttaccId(mdModel.getDqNonQuanAttaccId());
+            dq.setDqQuanAttaccId(mdModel.getDqQuanAttaccId());
+            dq.setDqRellNtPosAccId(mdModel.getDqRellNtPosAccId());
+            dq.setDqTempConsisId(mdModel.getDqTempConsisId());
+            dq.setDqTempValidId(mdModel.getDqTempValidId());
+            dq.setDqThemClassCorId(mdModel.getDqThemClassCorId());
+            dq.setDqTopConsisId(mdModel.getDqTopConsisId());
+            
+            
+            session.save(dq);
+            trx.commit();
+            
+            return "berhasil disimpan.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally { 
+            //session.close();
+        }
+    }
+
+    public String updateDqElement(DqElementModel mdModel,BigDecimal Id) {
+        
+        DqElement dq = new DqElement();
+       // String truthName;
+      //  truthName = getRelationalId(columName);
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(DqElement.class);
+            criteria.add(Restrictions.eq("id", Id));
+            dq = (DqElement) criteria.uniqueResult();
+
+            dq.setEvaluationMethodDescription(mdModel.getEvaluationMethodDescription());
+            dq.setEvaluationMethodType(mdModel.getEvaluationMethodType());
+            dq.setExtendsType(mdModel.getExtendsType());
+            dq.setMeasureDescription(mdModel.getMeasureDescription());
+            dq.setDqAbsExtPosAccId(mdModel.getDqAbsExtPosAccId());
+            dq.setDqAccTimeMeAsId(mdModel.getDqAccTimeMeAsId());
+            dq.setDqCompCommId(mdModel.getDqCompCommId());
+            dq.setDqCompOmId(mdModel.getDqCompOmId());
+            dq.setDqConcConsisId(mdModel.getDqConcConsisId());
+            dq.setDqDataQualityId(mdModel.getDqDataQualityId());
+            dq.setDqDomConsisId(mdModel.getDqDomConsisId());
+            dq.setDqFormConsisId(mdModel.getDqFormConsisId());
+            dq.setDqGridDataPosAccId(mdModel.getDqGridDataPosAccId());
+            dq.setDqNonQuanAttaccId(mdModel.getDqNonQuanAttaccId());
+            dq.setDqQuanAttaccId(mdModel.getDqQuanAttaccId());
+            dq.setDqRellNtPosAccId(mdModel.getDqRellNtPosAccId());
+            dq.setDqTempConsisId(mdModel.getDqTempConsisId());
+            dq.setDqTempValidId(mdModel.getDqTempValidId());
+            dq.setDqThemClassCorId(mdModel.getDqThemClassCorId());
+            dq.setDqTopConsisId(mdModel.getDqTopConsisId());
+
+            session.update(dq);
+            trx.commit();
+
+            return "berhasil diubah.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+    
+}

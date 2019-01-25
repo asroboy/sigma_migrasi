@@ -1,0 +1,85 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package model.metadata.xml.metadataextensioninfo;
+
+import model.metadata.xml.ParentElement;
+import model.metadata.xml.metadataentitysetinformation.CiResponsibleParty;
+
+/**
+ *
+ * @author wallet
+ */
+public class MdExtendedElementInformation {
+    
+    private String current="gmd:MD_ExtendedElementInformation";
+    private String subparent;
+    private String name="gmd:name.gco:CharacterString";
+    private String shortName="gmd:shortName.gco:CharacterString";
+    private String domainCode="gmd:domainCode";
+    private String definition="gmd:definition.gco:CharacterString";
+    private String obligation="gmd:obligation";
+    private String condition="gmd:condition.gco:CharacterString";
+    private String dataType="gmd:dataType.gmd:MD_DatatypeCode";
+    private String domainValue="gmd:domainValue.gco:CharacterString";
+    private String parentEntity="gmd:parentEntity.gco:CharacterString";
+    private String maximumOccurance="gmd:maximumOccurrence.gco:CharacterString";
+    private String rule="gmd:rule.gco:CharacterString";
+    private CiResponsibleParty ciResponsibleParty;
+
+    public MdExtendedElementInformation(String parent) {
+        this.subparent = parent+"."+current;
+    }
+
+    public String Name() {
+        return subparent+"."+name;
+    }
+
+    public String ShortName() {
+        return subparent+"."+shortName;
+    }
+
+    public String DomainCode() {
+        return subparent+"."+domainCode;
+    }
+
+    public String Definition() {
+        return subparent+"."+definition;
+    }
+
+    public String Obligation() {
+        return subparent+"."+obligation;
+    }
+
+    public String Condition() {
+        return subparent+"."+condition;
+    }
+
+    public String DataType() {
+        return subparent+"."+dataType;
+    }
+
+    public String DomainValue() {
+        return subparent+"."+domainValue;
+    }
+
+    public String ParentEntity() {
+        return subparent+"."+parentEntity;
+    }
+
+    public String MaximumOccurance() {
+        return subparent+"."+maximumOccurance;
+    }
+
+    public String Rule() {
+        return subparent+"."+rule;
+    }
+
+    public CiResponsibleParty CiResponsibleParty() {
+        ciResponsibleParty=new CiResponsibleParty(subparent+"."+ParentElement.SOURCE);
+        return ciResponsibleParty;
+    }
+    
+}

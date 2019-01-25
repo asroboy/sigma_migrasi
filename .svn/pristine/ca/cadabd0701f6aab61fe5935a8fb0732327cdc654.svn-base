@@ -1,0 +1,273 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtil;
+import config.HibernateUtilXml;
+import domain.CiContact;
+import domain.CiResponsibleParty;
+import domain.MdMetadata;
+import domain.MdMetadataHierarchylv;
+import java.math.BigDecimal;
+import java.util.List;
+import model.table.CiContactModel;
+import model.table.MdMetadataHierarchylvModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author wallet
+ */
+public class CiContactController {
+
+    public CiContactController() {
+
+    }
+    HibernateUtilXml hibernateUtilXml;
+    Session session;
+
+    public CiContactController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.hibernateUtilXml = hibernateUtilXml;
+        this.session = session;
+    }
+
+    public BigDecimal getMaxCiContactId() {
+        BigDecimal maxId = null;
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((CiContact) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        //session.close();
+        return maxId;
+    }
+
+    public CiContact getDataById(BigDecimal Id) {
+        CiContact ciContact = new CiContact();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.add(Restrictions.eq(CiContactModel.CI_RESPONSIBLEPARTYID, Id));
+            ciContact = (CiContact) criteria.uniqueResult();
+
+            if (ciContact == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+
+        return ciContact;
+    }
+
+    public CiContact getDataByProperty(BigDecimal Id, String hoursOfService, String contactInstruction) {
+        CiContact ciContact = new CiContact();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.add(Restrictions.eq("ciResponsiblePartyId", Id))
+                    .add(Restrictions.eq("houseOfService", hoursOfService))
+                    .add(Restrictions.eq("contactInstructions", contactInstruction));
+
+            ciContact = (CiContact) criteria.uniqueResult();
+
+            if (ciContact == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+
+        return ciContact;
+    }
+
+    public String saveCiContact(CiContactModel mdModel) {
+
+        CiContact ciContact = new CiContact();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+       Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            ciContact.setId(mdModel.getId());
+            ciContact.setHouseOfService(mdModel.getHouseOfService());
+            ciContact.setContactInstructions(mdModel.getContactInstruction());
+            ciContact.setCiResponsiblePartyId(mdModel.getCiResponsiblePartyId());
+
+            session.save(ciContact);
+            trx.commit();
+
+            return "saved successfully.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+
+    public String updateCiContact(BigDecimal id,CiContactModel mdModel) {
+
+        CiContact ciContact = new CiContact();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.add(Restrictions.eq("id",id));
+            ciContact = (CiContact) criteria.uniqueResult();
+
+            ciContact.setHouseOfService(mdModel.getHouseOfService());
+            ciContact.setContactInstructions(mdModel.getContactInstruction());
+            ciContact.setCiResponsiblePartyId(ciContact.getCiResponsiblePartyId());
+
+            session.update(ciContact);
+            trx.commit();
+
+            return "updated successfully.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+
+    public String updateCiContactProperty(CiContactModel mdModel) {
+
+        CiContact ciContact = new CiContact();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.add(Restrictions.eq("ciResponsiblePartyId", mdModel.getCiResponsiblePartyId()))
+                    .add(Restrictions.eq("houseOfService", mdModel.getHouseOfService()))
+                    .add(Restrictions.eq("contactInstructions", mdModel.getContactInstruction()));
+            ciContact = (CiContact) criteria.uniqueResult();
+
+            ciContact.setHouseOfService(mdModel.getHouseOfService());
+            ciContact.setContactInstructions(mdModel.getContactInstruction());
+            ciContact.setCiResponsiblePartyId(ciContact.getCiResponsiblePartyId());
+
+            session.update(ciContact);
+            trx.commit();
+
+            return "updated successfully.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+    
+    public String deleteCiContact(BigDecimal Id) {
+        CiContact ciContact = new CiContact();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.add(Restrictions.eq("id", Id));
+            ciContact = (CiContact) criteria.uniqueResult();
+
+            session.delete(ciContact);
+            trx.commit();
+            
+            return "deleted successfully.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally {
+            //session.close();
+        }
+        
+    }
+
+}

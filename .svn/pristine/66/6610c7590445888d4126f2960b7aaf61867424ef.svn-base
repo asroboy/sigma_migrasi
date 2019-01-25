@@ -1,0 +1,288 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtilXml;
+import domain.CiCitation;
+import domain.MdKeyword;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import model.table.CiCitationModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author wallet
+ */
+public class CiCitationController {
+
+    public CiCitationController() {
+    }
+    HibernateUtilXml hibernateUtilXml;
+    Session session;
+
+    public CiCitationController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.hibernateUtilXml = hibernateUtilXml;
+        this.session = session;
+    }
+
+    public BigDecimal getMaxCiCitationId() {
+
+        BigDecimal maxId = null;
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiCitation.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((CiCitation) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        ////session.close();
+
+        return maxId;
+    }
+    
+    public List getListOfId(BigDecimal Id) {
+
+        CiCitation ciCitation = new CiCitation();
+        List list = new ArrayList();
+        List id = new ArrayList();
+        int[] errorList = {-999, -999, -999};
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiCitation.class);
+            criteria.add(Restrictions.eq("mdKeywordId", Id));
+            //criteria.setMaxResults(3);
+
+            list = criteria.list();
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext()) {
+
+                ciCitation = (CiCitation) iterator.next();
+                id.add(ciCitation.getId());
+            }
+
+            if (id.size() == 0) {
+
+                List<Integer> intList = new ArrayList<Integer>();
+
+                for (int index = 0; index < errorList.length; index++) {
+                    intList.add(errorList[index]);
+                }
+
+                return intList;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+
+        return id;
+    }
+         
+    public String deletedCiCitation(BigDecimal Id) {
+        
+        CiCitation ciCitation = new CiCitation();
+        
+       if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiCitation.class);
+            criteria.add(Restrictions.eq("id", Id));
+            ciCitation = (CiCitation) criteria.uniqueResult();
+
+            session.delete(ciCitation);
+            trx.commit();
+            
+            return "berhasil dihapus.....!!";            
+            
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally { 
+            ////session.close();
+        }
+    }
+    
+    public CiCitation getDataById(String column,BigDecimal id) {
+
+        CiCitation ciCitation = new CiCitation();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiCitation.class);
+            criteria.add(Restrictions.eq(column, id));
+            ciCitation = (CiCitation) criteria.uniqueResult();
+
+            if (ciCitation == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            ////session.close();
+        }
+
+        return ciCitation;
+    }
+
+    public String saveCiCitation(CiCitationModel mdModel) {
+
+        CiCitation ciCitation = new CiCitation();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+         Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            ciCitation.setId(mdModel.getId());
+            ciCitation.setTitle(mdModel.getTitle());
+            ciCitation.setEdition(mdModel.getEdition());
+            ciCitation.setEditionDate(mdModel.getEditionDate());
+            ciCitation.setIsbn(mdModel.getIsbn());
+            ciCitation.setIssn(mdModel.getIssn());
+            ciCitation.setCollectiveTitle(mdModel.getCollectiveTitle());
+            ciCitation.setDqConformanceResultId(mdModel.getDqConformanceResultId());
+            ciCitation.setDqElementId(mdModel.getDqElementId());
+            ciCitation.setLiSourceId(mdModel.getLiSourceId());
+            ciCitation.setMdAggregateInfoId(mdModel.getMdAggregateInfoId());
+            ciCitation.setMdApplicationschemaInfoId(mdModel.getMdApplicationschemaInfoId());
+            ciCitation.setMdFeatureCatalogueDescId(mdModel.getMdFeatureCatalogueDescId());
+            ciCitation.setMdGeoReferenceAbleId(mdModel.getMdGeoReferenceAbleId());
+            ciCitation.setMdIdentificationId(mdModel.getMdIdentificationId());
+            ciCitation.setMdIdentifierId(mdModel.getMdIdentifierId());
+            ciCitation.setMdKeywordId(mdModel.getMdKeywordId());
+            ciCitation.setMdPortrayalCatalogueRefId(mdModel.getMdPortrayalCatalogueRefId());
+            ciCitation.setRsIdentifierId(mdModel.getRsIdentifierId());
+            ciCitation.setSvServiceIdentificationId(mdModel.getSvServiceIdentificationId());
+
+            session.save(ciCitation);
+            trx.commit();
+
+            return "berhasil disimpan.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            ////session.close();
+        }
+    }
+
+    public String updateCiCitation(BigDecimal id,CiCitationModel mdModel) {
+
+        CiCitation ciCitation = new CiCitation();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiCitation.class);
+            criteria.add(Restrictions.eq("id", id));
+            ciCitation = (CiCitation) criteria.uniqueResult();
+
+            ciCitation.setTitle(mdModel.getTitle());
+            ciCitation.setEdition(mdModel.getEdition());
+            ciCitation.setEditionDate(mdModel.getEditionDate());
+            ciCitation.setIsbn(mdModel.getIsbn());
+            ciCitation.setIssn(mdModel.getIssn());
+            ciCitation.setCollectiveTitle(mdModel.getCollectiveTitle());
+            ciCitation.setDqConformanceResultId(mdModel.getDqConformanceResultId());
+            ciCitation.setDqElementId(mdModel.getDqElementId());
+            ciCitation.setLiSourceId(mdModel.getLiSourceId());
+            ciCitation.setMdAggregateInfoId(mdModel.getMdAggregateInfoId());
+            ciCitation.setMdApplicationschemaInfoId(mdModel.getMdApplicationschemaInfoId());
+            ciCitation.setMdFeatureCatalogueDescId(mdModel.getMdFeatureCatalogueDescId());
+            ciCitation.setMdGeoReferenceAbleId(mdModel.getMdGeoReferenceAbleId());
+            ciCitation.setMdIdentificationId(mdModel.getMdIdentificationId());
+            ciCitation.setMdIdentifierId(mdModel.getMdIdentifierId());
+            ciCitation.setMdKeywordId(mdModel.getMdKeywordId());
+            ciCitation.setMdPortrayalCatalogueRefId(mdModel.getMdPortrayalCatalogueRefId());
+            ciCitation.setRsIdentifierId(mdModel.getRsIdentifierId());
+            ciCitation.setSvServiceIdentificationId(mdModel.getSvServiceIdentificationId());
+
+            session.update(ciCitation);
+            trx.commit();
+
+            return "berhasil diubah.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            ////session.close();
+        }
+    }
+    
+
+}

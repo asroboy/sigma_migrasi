@@ -1,0 +1,186 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package variable;
+
+/**
+ *
+ * @author wallet
+ */
+public class VarDistributionInformation {
+    
+    private String name;
+    private String version;
+    private String amendmentNumber;
+    private String specification;
+    private String fileDecompressionTechnique;
+    private String unitsOfDistribution;
+    private String transferSize;
+    private String nameOffline;
+    private String density;
+    private String densityUnits;
+    private String volumes;
+    private String mediumFormat;
+    private String mediumNote;
+    private String linkageOnline;
+    private String protocolOnline;
+    private String applicationProfileOnline;
+    private String nameOnline;
+    private String descriptionOnline;
+    private String functionOnline;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getAmendmentNumber() {
+        return amendmentNumber;
+    }
+
+    public void setAmendmentNumber(String amendmentNumber) {
+        this.amendmentNumber = amendmentNumber;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    public String getFileDecompressionTechnique() {
+        return fileDecompressionTechnique;
+    }
+
+    public void setFileDecompressionTechnique(String fileDecompressionTechnique) {
+        this.fileDecompressionTechnique = fileDecompressionTechnique;
+    }
+
+    public String getUnitsOfDistribution() {
+        return unitsOfDistribution;
+    }
+
+    public void setUnitsOfDistribution(String unitsOfDistribution) {
+        this.unitsOfDistribution = unitsOfDistribution;
+    }
+
+    public String getTransferSize() {
+        return transferSize;
+    }
+
+    public void setTransferSize(String transferSize) {
+        this.transferSize = transferSize;
+    }
+
+    public String getNameOffline() {
+        return nameOffline;
+    }
+
+    public void setNameOffline(String nameOffline) {
+        this.nameOffline = nameOffline;
+    }
+
+    public String getDensity() {
+        return density;
+    }
+
+    public void setDensity(String density) {
+        this.density = density;
+    }
+
+    public String getDensityUnits() {
+        return densityUnits;
+    }
+
+    public void setDensityUnits(String densityUnits) {
+        this.densityUnits = densityUnits;
+    }
+
+    public String getVolumes() {
+        return volumes;
+    }
+
+    public void setVolumes(String volumes) {
+        this.volumes = volumes;
+    }
+
+    public String getMediumFormat() {
+        return mediumFormat;
+    }
+
+    public void setMediumFormat(String mediumFormat) {
+        this.mediumFormat = mediumFormat;
+    }
+
+    public String getMediumNote() {
+        return mediumNote;
+    }
+
+    public void setMediumNote(String mediumNote) {
+        this.mediumNote = mediumNote;
+    }
+
+    public String getLinkageOnline() {
+        return linkageOnline;
+    }
+
+    public void setLinkageOnline(String linkageOnline) {
+        this.linkageOnline = linkageOnline;
+    }
+
+    public String getProtocolOnline() {
+        return protocolOnline;
+    }
+
+    public void setProtocolOnline(String protocolOnline) {
+        this.protocolOnline = protocolOnline;
+    }
+
+    public String getApplicationProfileOnline() {
+        return applicationProfileOnline;
+    }
+
+    public void setApplicationProfileOnline(String applicationProfileOnline) {
+        this.applicationProfileOnline = applicationProfileOnline;
+    }
+
+    public String getNameOnline() {
+        return nameOnline;
+    }
+
+    public void setNameOnline(String nameOnline) {
+        this.nameOnline = nameOnline;
+    }
+
+    public String getDescriptionOnline() {
+        return descriptionOnline;
+    }
+
+    public void setDescriptionOnline(String descriptionOnline) {
+        this.descriptionOnline = descriptionOnline;
+    }
+
+    public String getFunctionOnline() {
+        return functionOnline;
+    }
+
+    public void setFunctionOnline(String functionOnline) {
+        this.functionOnline = functionOnline;
+    }
+    
+}

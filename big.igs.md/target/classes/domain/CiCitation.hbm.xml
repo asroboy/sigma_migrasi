@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 20, 2017 9:23:58 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="domain.CiCitation" table="CI_CITATION" schema="METADATA">
+        <id name="id" type="big_decimal">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="collectiveTitle" type="string">
+            <column name="COLLECTIVETITLE" />
+        </property>
+        <property name="edition" type="string">
+            <column name="EDITION" />
+        </property>
+        <property name="editionDate" type="date">
+            <column name="EDITIONDATE" length="7" />
+        </property>
+        <property name="isbn" type="string">
+            <column name="ISBN" />
+        </property>
+        <property name="issn" type="string">
+            <column name="ISSN" />
+        </property>
+        <property name="otherCitationDetails" type="string">
+            <column name="OTHERCITATIONDETAILS" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" />
+        </property>
+        <property name="mdAggregateInfoId" type="big_decimal">
+            <column name="MD_AGGREGATEINFOID" precision="22" scale="0" />
+        </property>
+        <property name="mdApplicationschemaInfoId" type="big_decimal">
+            <column name="MD_APPLICATIONSCHEMAINFOID" precision="22" scale="0" />
+        </property>
+        <property name="dqConformanceResultId" type="big_decimal">
+            <column name="DQ_CONFORMANCERESULTID" precision="22" scale="0" />
+        </property>
+        <property name="dqElementId" type="big_decimal">
+            <column name="DQ_ELEMENTID" precision="22" scale="0" />
+        </property>
+        <property name="mdFeatureCatalogueDescId" type="big_decimal">
+            <column name="MD_FEATURECATALOGUEDESCID" precision="22" scale="0" />
+        </property>
+        <property name="mdGeoReferenceAbleId" type="big_decimal">
+            <column name="MD_GEOREFERENCEABLEID" precision="22" scale="0" />
+        </property>
+        <property name="mdIdentificationId" type="big_decimal">
+            <column name="MD_IDENTIFICATIONID" precision="22" scale="0" />
+        </property>
+        <property name="mdKeywordId" type="big_decimal">
+            <column name="MD_KEYWORDID" precision="22" scale="0" />
+        </property>
+        <property name="mdIdentifierId" type="big_decimal">
+            <column name="MD_IDENTIFIERID" precision="22" scale="0" />
+        </property>
+        <property name="mdPortrayalCatalogueRefId" type="big_decimal">
+            <column name="MD_PORTRAYALCATALOGUEREFID" precision="22" scale="0" />
+        </property>
+        <property name="liSourceId" type="big_decimal">
+            <column name="LI_SOURCEID" precision="22" scale="0" />
+        </property>
+        <property name="svServiceIdentificationId" type="big_decimal">
+            <column name="SV_SERVICEIDENTIFICATIONID" precision="22" scale="0" />
+        </property>
+        <property name="rsIdentifierId" type="big_decimal">
+            <column name="RS_IDENTIFIERID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,206 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package config;
+
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+/**
+ *
+ * @author wallet
+ */
+public class HibernateUtilXml {
+
+    Configuration configuration;
+
+    public HibernateUtilXml() {
+    }
+
+    private DataConfiguration data = new DataConfiguration();
+    
+    private SessionFactory sessionFactory;
+
+//    private static Session session;
+    public HibernateUtilXml(DataConfiguration data) {
+        this.data = data;
+        config();
+    }
+    
+    public String getIp(){
+        return data.getIp();
+    }
+    
+    public String getDbName(){
+        return data.getDatabaseName();
+    }
+    
+    public String getPort(){
+        return data.getPort();
+    }
+    
+    public String getUsername(){
+        return data.getUsername();
+    }
+    
+    public String getPassword(){
+        return data.getPassword();
+    }
+
+    private void config() {
+        //Create the SessionFactory from hibernate.cfg.xml
+        Configuration configuration = new Configuration();
+
+        System.out.println("==========================");
+        System.out.println("=====CONFIGURATION========");
+        System.out.println("HOST " + data.getIp());
+        System.out.println("USERNAME " + data.getUsername());
+
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
+        configuration.setProperty("hibernate.connection.driver_class", "oracle.jdbc.OracleDriver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:oracle:thin:@//" + data.getIp() + ":" + data.getPort() + "/" + data.getDatabaseName());
+        configuration.setProperty("hibernate.connection.username", data.getUsername());
+        configuration.setProperty("hibernate.connection.password", data.getPassword());
+        configuration.setProperty("hbm2ddl.auto", "update");
+        configuration.setProperty("hibernate.current_session_context_class", "thread");
+        configuration.setProperty("format_sql", "false");
+        configuration.setProperty("show_sql", "false");
+
+        configuration.addClass(domain.PtLocale.class);
+        configuration.addClass(domain.MdMetadata.class);
+        configuration.addClass(domain.MdCharacterSetCode.class);
+        configuration.addClass(domain.MdScopecode.class);
+        configuration.addClass(domain.MdMetadataHierarchylv.class);
+        configuration.addClass(domain.MdMetadataHierarchylvName.class);
+        configuration.addClass(domain.CiRoleCode.class);
+        configuration.addClass(domain.CiResponsibleParty.class);
+        configuration.addClass(domain.CiContact.class);
+        configuration.addClass(domain.CiTelephone.class);
+        configuration.addClass(domain.CiTelephoneVoice.class);
+        configuration.addClass(domain.CiTelephoneFacsimile.class);
+        configuration.addClass(domain.CiAddress.class);
+        configuration.addClass(domain.CiAddressDeliveryPoint.class);
+        configuration.addClass(domain.CiAddressEmailAddress.class);
+        configuration.addClass(domain.MdReferenceSystem.class);
+        configuration.addClass(domain.MdIdentifier.class);
+        configuration.addClass(domain.RsIdentifier.class);
+        configuration.addClass(domain.CiCitation.class);
+        configuration.addClass(domain.MdMaintenanceFrequencyCode.class);
+        configuration.addClass(domain.MdMaintenanceInfo.class);
+        configuration.addClass(domain.MdContentInfo.class);
+        configuration.addClass(domain.MdCoverageContentTypeCode.class);
+        configuration.addClass(domain.MdCoverageDescription.class);
+        configuration.addClass(domain.MdPortrayalCatalogueRef.class);
+        configuration.addClass(domain.CiCitationAlternateTitle.class);
+        configuration.addClass(domain.CiDate.class);
+        configuration.addClass(domain.CiDateTypeCode.class);
+        configuration.addClass(domain.MdSpatialRepresentTypeCode.class);
+        configuration.addClass(domain.MdSpatialRepresentation.class);
+        configuration.addClass(domain.MdTopologyLevelCode.class);
+        configuration.addClass(domain.MdVectorSpatialRepresentation.class);
+        configuration.addClass(domain.MdGeometricObjects.class);
+        configuration.addClass(domain.MdGeometricObjectTypeCode.class);
+        configuration.addClass(domain.MdIdentification.class);
+        configuration.addClass(domain.MdProgressCode.class);
+        configuration.addClass(domain.MdIdentificationStatus.class);
+        configuration.addClass(domain.MdBrowseGraphic.class);
+        configuration.addClass(domain.MdFormat.class);
+        configuration.addClass(domain.MdDistributor.class);
+        configuration.addClass(domain.MdDigitalTransferOptions.class);
+        configuration.addClass(domain.CiOnlineFunctionCode.class);
+        configuration.addClass(domain.CiOnlineResource.class);
+        configuration.addClass(domain.MdMediumNameCode.class);
+        configuration.addClass(domain.MdMedium.class);
+        configuration.addClass(domain.MdKeywordTypeCode.class);
+        configuration.addClass(domain.MdKeyword.class);
+        configuration.addClass(domain.MdKeywordKeyword.class);
+        configuration.addClass(domain.SvServiceIdentification.class);
+        configuration.addClass(domain.MdConstraints.class);
+        configuration.addClass(domain.MdConstraintsUseLimitation.class);
+        configuration.addClass(domain.DsInitiativeTypeCode.class);
+        configuration.addClass(domain.DsAssociationTypeCode.class);
+        configuration.addClass(domain.MdAggregateInfo.class);
+        configuration.addClass(domain.MdDataIdentification.class);
+        configuration.addClass(domain.MdDataIdentificationSpatrep.class);
+        configuration.addClass(domain.MdDataIdentificationCharset.class);
+        configuration.addClass(domain.MdDataIdentificationLang.class);
+        configuration.addClass(domain.MdTopicCategoryCode.class);
+        configuration.addClass(domain.MdDataIdentificationTopcat.class);
+        configuration.addClass(domain.MdResolution.class);
+        configuration.addClass(domain.MdRepresentativeFraction.class);
+        configuration.addClass(domain.ExExtent.class);
+        configuration.addClass(domain.ExGeographicExtent.class);
+        configuration.addClass(domain.ExGeographicBoundingBox.class);
+        configuration.addClass(domain.ExVerticalExtent.class);
+        configuration.addClass(domain.ExTemporalExtent.class);
+        configuration.addClass(domain.MdUploadFile.class);
+        configuration.addClass(domain.DqDataQuality.class);
+        configuration.addClass(domain.DqScope.class);
+        configuration.addClass(domain.LiLineage.class);
+        configuration.addClass(domain.LiProcessStep.class);
+        configuration.addClass(domain.LiSource.class);
+        configuration.addClass(domain.DqCompleteness.class);
+        configuration.addClass(domain.DqCompComm.class);
+        configuration.addClass(domain.DqEvaluationMethodTypeCode.class);
+        configuration.addClass(domain.DqElement.class);
+        configuration.addClass(domain.DqElementNameOfMeasure.class);
+        configuration.addClass(domain.DqElementDateTime.class);
+        configuration.addClass(domain.DqResult.class);
+        configuration.addClass(domain.DqConformanceResult.class);
+        configuration.addClass(domain.DqQuantitativeResult.class);
+        configuration.addClass(domain.DqQuantitativeResultValue.class);
+        configuration.addClass(domain.DqComPom.class);
+        configuration.addClass(domain.DqLogicalConsistency.class);
+        configuration.addClass(domain.DqConcconsis.class);
+        configuration.addClass(domain.DqDomconsis.class);
+        configuration.addClass(domain.DqFormConsis.class);
+        configuration.addClass(domain.DqTopConsis.class);
+        configuration.addClass(domain.DqPositionalAccuracy.class);
+        configuration.addClass(domain.DqAbsextposacc.class);
+        configuration.addClass(domain.DqGridDataPosAcc.class);
+        configuration.addClass(domain.DqRellntPosAcc.class);
+        configuration.addClass(domain.DqTemporalAccuracy.class);
+        configuration.addClass(domain.DqAccTimeMeAs.class);
+        configuration.addClass(domain.DqTempConsis.class);
+        configuration.addClass(domain.DqTempValid.class);
+        configuration.addClass(domain.DqThematicAccuracy.class);
+        configuration.addClass(domain.DqThemClassCor.class);
+        configuration.addClass(domain.DqNonQuanAttacc.class);
+        configuration.addClass(domain.DqQuanAttac.class);
+        configuration.addClass(domain.MdApplicationSchemaInfo.class);
+        configuration.addClass(domain.MdMetadataExtensionInfo.class);
+        configuration.addClass(domain.MdDataTypeCode.class);
+        configuration.addClass(domain.MdObligationCode.class);
+        configuration.addClass(domain.MdExtendedElementInfo.class);
+        configuration.addClass(domain.CiPresentationFormCode.class);
+        configuration.addClass(domain.CiCitationPresentationForm.class);
+        configuration.addClass(domain.MdExtendedElementInfoParent.class);
+        configuration.addClass(domain.ExBoundingPolygon.class);
+        configuration.addClass(domain.ExBoundingPolygonPolygon.class);
+        configuration.addClass(domain.MdSecurityConstraints.class);
+        configuration.addClass(domain.MdLegalConstraints.class);
+        configuration.addClass(domain.MdDistribution.class);
+        configuration.addClass(domain.MdLegalConstraintsOther.class);
+        configuration.addClass(domain.CiSeries.class);
+        configuration.addClass(domain.MdIdentificationCredit.class);
+        configuration.addClass(domain.MdClassificationCode.class);
+        this.configuration = configuration;
+    }
+
+    public SessionFactory buildSession() {
+        try {
+             sessionFactory = configuration.buildSessionFactory();
+            return sessionFactory;
+        } catch (HibernateException ex) {
+            // Make sure you log the exception, as it might be swallowed
+            System.err.println("Hibernate Error " + ex);
+            throw new ExceptionInInitializerError(ex);
+        }finally{
+            return sessionFactory.getCurrentSession().getSessionFactory();
+        }
+    }
+
+}

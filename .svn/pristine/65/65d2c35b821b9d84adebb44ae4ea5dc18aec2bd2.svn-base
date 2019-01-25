@@ -1,0 +1,157 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtil;
+import config.HibernateUtilXml;
+import domain.DqQuantitativeResultValue;
+import java.math.BigDecimal;
+import model.table.DqQuantitativeResultValueModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author wallet
+ */
+public class DqQuantitativeResultValueController {
+    
+    Session session;
+    HibernateUtilXml hibernateUtilXml;
+
+    public DqQuantitativeResultValueController() {
+    }
+
+    public DqQuantitativeResultValueController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.session = session;
+        this.hibernateUtilXml = hibernateUtilXml;
+    }
+    
+    public DqQuantitativeResultValue getDataById(BigDecimal id) {
+        DqQuantitativeResultValue dq = new DqQuantitativeResultValue();
+                
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(DqQuantitativeResultValue.class);
+            criteria.add(Restrictions.eq("dqQuantitativeResultId", id));
+            dq = (DqQuantitativeResultValue) criteria.uniqueResult();
+
+            if (dq == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally { 
+            //session.close();
+        }
+
+        return dq;
+    }
+    
+    public String deletedDqQuantitativeResultValue(BigDecimal id) {
+        DqQuantitativeResultValue dq = new DqQuantitativeResultValue();
+                
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(DqQuantitativeResultValue.class);
+            criteria.add(Restrictions.eq("dqQuantitativeResultId", id));
+            dq = (DqQuantitativeResultValue) criteria.uniqueResult();
+
+            session.delete(dq);
+            trx.commit();
+            
+            return "deleted successfully......!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally { 
+            //session.close();
+        }
+    }
+    
+    public String saveDqQuantitativeResultValue(DqQuantitativeResultValueModel mdModel) {
+       
+        DqQuantitativeResultValue dq = new DqQuantitativeResultValue();
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            dq.setDqQuantitativeResultId(mdModel.getDqQuantitativeResultId());
+            dq.setValue(mdModel.getValue());
+                        
+            session.save(dq);
+            trx.commit();
+            
+            return "saved successfully.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally { 
+            //session.close();
+        }
+    }
+
+    public String updateDqQuantitativeResultValue(DqQuantitativeResultValueModel mdModel) {
+        
+        DqQuantitativeResultValue dq = new DqQuantitativeResultValue();
+        
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(DqQuantitativeResultValue.class);
+            criteria.add(Restrictions.eq("dqQuantitativeResultId", mdModel.getDqQuantitativeResultId()));
+            dq = (DqQuantitativeResultValue) criteria.uniqueResult();
+
+            dq.setValue(mdModel.getValue());
+
+            session.update(dq);
+            trx.commit();
+
+            return "updated successfully.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+    
+}

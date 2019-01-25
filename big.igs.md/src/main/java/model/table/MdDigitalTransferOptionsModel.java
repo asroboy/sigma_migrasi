@@ -1,0 +1,74 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package model.table;
+
+import java.math.BigDecimal;
+
+/**
+ *
+ * @author wallet
+ */
+public class MdDigitalTransferOptionsModel {
+    
+    public static final String MD_DISTRIBUTIONID="mdDistributionId";
+    public static final String MD_DISTRIBUTORID="mdDistributorId";
+    private BigDecimal id;
+    private BigDecimal transferSize;
+    private String unitsOfDistribution;
+    private String stringTransferSize;
+    private BigDecimal mdDistributionId;
+    private BigDecimal mdDistributorId;
+
+    public BigDecimal getId() {
+        return id;
+    }
+
+    public void setId(BigDecimal id) {
+        this.id = id;
+    }
+
+    public BigDecimal getTransferSize() {
+        return transferSize;
+    }
+
+    public void setTransferSize(BigDecimal transferSize) {
+        this.transferSize = transferSize;
+    }
+
+    public String getUnitsOfDistribution() {
+        return unitsOfDistribution;
+    }
+
+    public void setUnitsOfDistribution(String unitsOfDistribution) {
+        this.unitsOfDistribution = unitsOfDistribution;
+    }
+
+    public BigDecimal getMdDistributionId() {
+        return mdDistributionId;
+    }
+
+    public void setMdDistributionId(BigDecimal mdDistributionId) {
+        this.mdDistributionId = mdDistributionId;
+    }
+
+    public BigDecimal getMdDistributorId() {
+        return mdDistributorId;
+    }
+
+    public void setMdDistributorId(BigDecimal mdDistributorId) {
+        this.mdDistributorId = mdDistributorId;
+    }
+
+    public String getStringTransferSize() {
+        return stringTransferSize;
+    }
+
+    public void setStringTransferSize(String stringTransferSize) {
+        this.stringTransferSize = stringTransferSize;
+    }
+        
+    
+}

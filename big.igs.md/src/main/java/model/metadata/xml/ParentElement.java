@@ -1,0 +1,85 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package model.metadata.xml;
+
+/**
+ *
+ * @author wallet
+ */
+public class ParentElement {
+    
+    public static final String ROOT="MD_Metadata";
+    public static final String CONTACT="gmd:contact";
+    public static final String CONTACTINFO="gmd:contactInfo";
+    public static final String PHONE="gmd:phone";
+    public static final String ADDRESS="gmd:address";
+    public static final String CITATION="gmd:citation";
+    public static final String IDENTIFICATIONINFO="gmd:identificationInfo";
+    public static final String DATE_="gmd:date";
+    public static final String IDENTIFIER="gmd:identifier";
+    public static final String POINTOFCONTACT="gmd:pointOfContact";
+    public static final String RESOURCEMAINTENANCE="gmd:resourceMaintenance";
+    public static final String GRAPHICOVERVIEW="gmd:graphicOverview";
+    public static final String RESOURCEFORMAT="gmd:resourceFormat";
+    public static final String FORMATDISTRIBUTOR="gmd:formatDistributor";
+    public static final String DISTRIBUTORCONTACT="gmd:distributorContact";
+    public static final String DISTRIBUTORTRANSFEROPTIONS="gmd:distributorTransferOptions";
+    public static final String ONLINE="gmd:onLine";
+    public static final String OFFLINE="gmd:offLine";
+    public static final String DESCRIPTIVEKEYWORDS="gmd:descriptiveKeywords";
+    public static final String THESAURUSNAME="gmd:thesaurusName";
+    public static final String RESOURCECONSTRAINTS="gmd:resourceConstraints";
+    public static final String AGGREGATIONINFO="gmd:aggregationInfo";
+    public static final String AGGREGATEDATASETNAME="gmd:aggregateDataSetName";
+    public static final String SPATIALREPRESENTATIONTYPE="gmd:spatialRepresentationType";
+    public static final String SPATIALRESOLUTION="gmd:spatialResolution";
+    public static final String EQUIVALENTSCALE="gmd:equivalentScale";
+    public static final String EXTENT="gmd:extent";
+    public static final String GEOGRAPHICELEMENT="gmd:geographicElement";
+    public static final String PORTRAYALCATALOGUEINFO="gmd:portrayalCatalogueInfo";
+    public static final String PORTRAYALCATALOGUECITATION="gmd:portrayalCatalogueCitation";
+    public static final String METADATAMAINTENANCE="gmd:metadataMaintenance";
+    public static final String REFERENCESYSTEMINFO="gmd:referenceSystemInfo";
+    public static final String REFERENCESYSTEMIDENTIFIER="gmd:referenceSystemIdentifier";
+    public static final String ONLINERESOURCE="gmd:onlineResource";
+    public static final String SPATIALREPRESENTATIONINFO="gmd:spatialRepresentationInfo";
+    public static final String GEOMETRICOBJECTS="gmd:geometricObjects";
+    public static final String AUTHORITY="gmd:authority";
+    public static final String METADATAEXTENSIONINFO="gmd:metadataExtensionInfo";
+    public static final String EXTENSIONONLINERESOURCE="gmd:extensionOnLineResource";
+    public static final String EXTENDEDELEMENTINFORMATION="gmd:extendedElementInformation";
+    public static final String SOURCE="gmd:source";
+    public static final String AGGREGATEDATASETIDENTIFIER="gmd:aggregateDataSetIdentifier";
+    public static final String CONTENTINFO="gmd:contentInfo";
+    public static final String DATAQUALITYINFO="gmd:dataQualityInfo";
+    public static final String SCOPE="gmd:scope";
+    public static final String REPORT="gmd:report";
+    public static final String MEASUREIDENTIFICATION="gmd:measureIdentification";
+    public static final String EVALUATIONPROCEDURE="gmd:evaluationProcedure";
+    public static final String SPESIFICATION="gmd:specification";
+    public static final String RESULT="gmd:result";
+    public static final String VALUEUNIT="gmd:valueUnit";
+    public static final String LINEAGE="gmd:lineage";
+    public static final String PROCESSSTEP="gmd:processStep";
+    public static final String PROCESSOR="gmd:processor";
+    public static final String SCALEDENOMINATOR="gmd:scaleDenominator";
+    public static final String SOURCEREFERENCESYSTEM="gmd:sourceReferenceSystem";
+    public static final String SERIES="gmd:series";
+    public static final String SOURCECITATION="gmd:sourceCitation";
+    public static final String SOURCEEXTENT="gmd:sourceExtent";
+    public static final String POLYGON="gmd:polygon";
+    public static final String SOURCESTEP="gmd:sourceStep";
+    public static final String METADATACONSTRAINTS="gmd:metadataConstraints";
+    public static final String APPLICATIONSCHEMAINFO="gmd:applicationSchemaInfo";
+    public static final String NAME="gmd:name";
+    public static final String DISTRIBUTIONINFO="gmd:distributionInfo";
+    public static final String DISTRIBUTOR="gmd:distributor";
+    public static final String TRANSFEROPTION="gmd:transferOptions";
+    public static final String CITEDRESPONSIBLEPARTY="gmd:citedResponsibleParty";
+    
+    
+
+}

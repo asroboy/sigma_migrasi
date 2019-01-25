@@ -1,0 +1,151 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sigma.migrationtool.test;
+
+import static com.sigma.migrationtool.test.TestDevToProd.conSumber;
+import static com.sigma.migrationtool.test.TestDevToProd.conTarget;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.oracle.OraReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import oracle.spatial.geometry.JGeometry;
+import oracle.sql.STRUCT;
+
+/**
+ *
+ * @author Ridho
+ */
+public class TestGetDataSDO {
+
+    public static void main(String[] arg) {
+        try {
+            getData();
+        } catch (SQLException | ParseException ex) {
+            Logger.getLogger(TestGetDataSDO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(TestGetDataSDO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void getData() throws SQLException, ParseException, Exception {
+        setupConnectionSumber();
+        String sql = "SELECT SHAPE, ELEVAS, OBJECTID, SRS_ID, METADATA, FCODE, NAMOBJ FROM IGD.spotheight";
+        println(sql);
+        try (Statement stmt = conSumber.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            simpleInsert(rs);
+        }
+    }
+
+    private static void setupConnectionSumber() {
+        println("Setup con. sumber");
+
+        String driverName = "oracle.jdbc.OracleDriver";
+        String url = "jdbc:oracle:thin:@"
+                + "localhost"
+                + ":" + "1521"
+                + ":" + "orcl";
+        String username = "IGD";
+        String password = "IGD";
+        conSumber = getConnection(driverName, url, username, password);
+    }
+
+    private static void setupConnectionTarget() {
+        println("Setup con. target");
+
+        String driverName = "oracle.jdbc.OracleDriver";
+        String url = "jdbc:oracle:thin:@"
+                + "localhost"
+                + ":" + "1521"
+                + ":" + "migrasisde";
+
+        String username = "PUBLIKASI";
+        String password = "PUBLIKASI";
+        conTarget = getConnection(driverName, url, username, password);
+    }
+
+    private static void simpleInsert(ResultSet rs) throws SQLException, Exception {
+        setupConnectionTarget();
+
+        conTarget.setAutoCommit(false);
+        String sql = "INSERT INTO PUBLIKASI.SPOTHEIGHT_PT (NAMOBJ, ELEVAS, OBJECTID, FCODE, METADATA, SHAPE, SRS_ID) VALUES ("
+                + "?,?,?,?,?"
+                + ", SDE.ST_GEOMFROMTEXT(?, ?), ?)";
+        PreparedStatement stmt = conTarget.prepareStatement(sql);
+
+        while (rs.next()) {
+            OraReader reader = new OraReader();
+            STRUCT shape = (STRUCT) rs.getObject("SHAPE");
+            JGeometry jGeom = JGeometry.load(shape);
+            Geometry geometry = reader.read(shape);
+             println("Dimension " + jGeom.getDimensions());
+            String wkt = geometry.toText();
+            wkt = wkt.replace(")", " " + jGeom.getPoint()[2] + ")");
+            String makePoint = "" + jGeom.getPoint()[0] + "," + jGeom.getPoint()[1] + "," + jGeom.getPoint()[2] + ")";
+            wkt = wkt.replace("POINT", "POINT Z");
+            println(wkt);
+//          STRUCT shape = JGeometry.store(jGeometry, conSumber);
+            stmt.setString(1, (String) rs.getString("NAMOBJ"));
+            stmt.setDouble(2, (Double) rs.getDouble("ELEVAS"));
+            stmt.setInt(3, rs.getInt("OBJECTID"));
+            stmt.setString(4, rs.getString("FCODE"));
+            stmt.setString(5, rs.getString("METADATA"));
+            stmt.setString(6, wkt);
+//            stmt.setDouble(6, jGeom.getPoint()[0]);
+//            stmt.setDouble(7, jGeom.getPoint()[1]);
+//            stmt.setDouble(8, jGeom.getPoint()[2]);
+            stmt.setInt(7, geometry.getSRID());
+            stmt.setInt(8, geometry.getSRID());
+            stmt.addBatch();
+        }
+        stmt.executeBatch();
+        conTarget.commit();
+    }
+
+    private static Connection getConnection(String driverName, String url, String username, String password) {
+        try {
+//            "oracle.jdbc.driver.OracleDriver"
+            Class.forName(driverName);
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your Oracle JDBC Driver?");
+            e.printStackTrace();
+            return null;
+        }
+//        System.out.println("Oracle JDBC Driver Registered!");
+        Connection connection = null;
+
+        try {
+            // url = "jdbc:oracle:thin:@localhost:1521:orcl"
+            //username = "system";
+            //password = "root123";
+            connection = DriverManager.getConnection(
+                    url, username, password
+            );
+        } catch (SQLException e) {
+            System.out.println("Connection Failed! Check output console");
+            e.printStackTrace();
+            return null;
+
+        }
+
+        return connection;
+    }
+
+    private static void println(String message) {
+        System.out.println(message);
+    }
+
+    private static void print(String message) {
+        System.out.print(message);
+    }
+}

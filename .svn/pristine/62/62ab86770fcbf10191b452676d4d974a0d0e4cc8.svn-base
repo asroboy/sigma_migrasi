@@ -1,0 +1,199 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtilXml;
+import domain.MdRepresentativeFraction;
+import java.math.BigDecimal;
+import java.util.List;
+import model.table.MdRepresentativeFractionModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author Fauzy Ramedia
+ */
+public class MdRepresentativeFractionController {
+
+    public MdRepresentativeFractionController() {
+    }
+
+    HibernateUtilXml hibernateUtilXml;
+    Session session;
+
+    public MdRepresentativeFractionController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.hibernateUtilXml = hibernateUtilXml;
+        this.session = session;
+    }
+
+    public BigDecimal getMaxMdRepresentativeFractionId() {
+
+        BigDecimal maxId = null;
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdRepresentativeFraction.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((MdRepresentativeFraction) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        //session.close();
+
+        return maxId;
+    }
+    
+    public MdRepresentativeFraction getDataById(String column,BigDecimal Id) {
+
+        MdRepresentativeFraction mdRepresentativeFraction = new MdRepresentativeFraction();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdRepresentativeFraction.class);
+            criteria.add(Restrictions.eq(column, Id));
+            mdRepresentativeFraction = (MdRepresentativeFraction) criteria.uniqueResult();
+
+            if (mdRepresentativeFraction == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            //session.close();
+        }
+
+        return mdRepresentativeFraction;
+    }
+
+    public String deletedMdRepresentativeFraction(BigDecimal Id) {
+
+        MdRepresentativeFraction mdRepresentativeFraction = new MdRepresentativeFraction();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdRepresentativeFraction.class);
+            criteria.add(Restrictions.eq("id", Id));
+            mdRepresentativeFraction = (MdRepresentativeFraction) criteria.uniqueResult();
+
+            session.delete(mdRepresentativeFraction);
+            trx.commit();
+            
+            return "berhasil dihapus......!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+
+    public String saveMdRepresentativeFraction(MdRepresentativeFractionModel mdModel) {
+        MdRepresentativeFraction MdRepresentativeFraction = new MdRepresentativeFraction();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            MdRepresentativeFraction.setId(mdModel.getId());
+            MdRepresentativeFraction.setDenominator(mdModel.getDenominator());
+            MdRepresentativeFraction.setMdResolutionId(mdModel.getMdResolutionId());
+            MdRepresentativeFraction.setLiSourceId(mdModel.getLiSourceId());
+
+            session.save(MdRepresentativeFraction);
+            trx.commit();
+
+            return "berhasi disimpan.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+
+    public String updateMdRepresentativeFraction(BigDecimal id,MdRepresentativeFractionModel mdModel) {
+
+        MdRepresentativeFraction mdRepresentativeFraction = new MdRepresentativeFraction();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdRepresentativeFraction.class);
+            criteria.add(Restrictions.eq("id", id));
+            mdRepresentativeFraction = (MdRepresentativeFraction) criteria.uniqueResult();
+
+            mdRepresentativeFraction.setDenominator(mdModel.getDenominator());
+            mdRepresentativeFraction.setMdResolutionId(mdModel.getMdResolutionId());
+            mdRepresentativeFraction.setLiSourceId(mdModel.getLiSourceId());
+
+            session.update(mdRepresentativeFraction);
+            trx.commit();
+
+            return "berhasil diubah.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+    
+}

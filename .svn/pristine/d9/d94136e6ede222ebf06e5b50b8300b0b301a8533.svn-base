@@ -1,0 +1,836 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package test;
+
+import config.DataConfiguration;
+import config.HibernateUtil;
+import config.HibernateUtilXml;
+import controller.MdMetadataController;
+import domain.CiAddress;
+import domain.CiContact;
+import domain.CiResponsibleParty;
+import domain.CiRoleCode;
+import domain.MdCharacterSetCode;
+import domain.MdGeometricObjects;
+import domain.MdIdentifier;
+import domain.MdKeyword;
+import domain.MdMetadata;
+import domain.MdReferenceSystem;
+import domain.MdRepresentativeFraction;
+import domain.PtLocale;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import model.table.MdMetadataModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import static org.hibernate.criterion.Projections.count;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.service.ServiceRegistry;
+import view.DeleteMigrasiMetadata;
+
+/**
+ *
+ * @author wallet
+ */
+public class Test {
+
+    static HibernateUtilXml hibernateUtilXml;
+
+    private static SessionFactory buildSession() {
+
+        try {
+
+            //Create the SessionFactory from hibernate.cfg.xml
+            Configuration configuration = new Configuration();
+//            configuration.addResource("hibernate.cfg.xml");
+
+            configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
+            configuration.setProperty("hibernate.connection.driver_class", "oracle.jdbc.OracleDriver");
+            configuration.setProperty("hibernate.connection.url", "jdbc:oracle:thin:@//" + "localhost:1521" + "/" + "orcl.168.56.1");
+            configuration.setProperty("hibernate.connection.username", "METADATA");
+            configuration.setProperty("hibernate.connection.password", "METADATA");
+            configuration.setProperty("hbm2ddl.auto", "update");
+            configuration.setProperty("hibernate.current_session_context_class", "thread");
+            configuration.setProperty("format_sql", "true");
+
+            configuration.addClass(domain.PtLocale.class);
+            configuration.addClass(domain.MdMetadata.class);
+            configuration.addClass(domain.MdCharacterSetCode.class);
+            configuration.addClass(domain.MdScopecode.class);
+            configuration.addClass(domain.MdMetadataHierarchylv.class);
+            configuration.addClass(domain.MdMetadataHierarchylvName.class);
+            configuration.addClass(domain.CiRoleCode.class);
+            configuration.addClass(domain.CiResponsibleParty.class);
+            configuration.addClass(domain.CiContact.class);
+            configuration.addClass(domain.CiTelephone.class);
+            configuration.addClass(domain.CiTelephoneVoice.class);
+            configuration.addClass(domain.CiTelephoneFacsimile.class);
+            configuration.addClass(domain.CiAddress.class);
+            configuration.addClass(domain.CiAddressDeliveryPoint.class);
+            configuration.addClass(domain.CiAddressEmailAddress.class);
+            configuration.addClass(domain.MdReferenceSystem.class);
+            configuration.addClass(domain.MdIdentifier.class);
+            configuration.addClass(domain.RsIdentifier.class);
+            configuration.addClass(domain.CiCitation.class);
+            configuration.addClass(domain.MdMaintenanceFrequencyCode.class);
+            configuration.addClass(domain.MdMaintenanceInfo.class);
+            configuration.addClass(domain.MdContentInfo.class);
+            configuration.addClass(domain.MdCoverageContentTypeCode.class);
+            configuration.addClass(domain.MdCoverageDescription.class);
+            configuration.addClass(domain.MdPortrayalCatalogueRef.class);
+            configuration.addClass(domain.CiCitationAlternateTitle.class);
+            configuration.addClass(domain.CiDate.class);
+            configuration.addClass(domain.CiDateTypeCode.class);
+            configuration.addClass(domain.MdSpatialRepresentTypeCode.class);
+            configuration.addClass(domain.MdSpatialRepresentation.class);
+            configuration.addClass(domain.MdTopologyLevelCode.class);
+            configuration.addClass(domain.MdVectorSpatialRepresentation.class);
+            configuration.addClass(domain.MdGeometricObjects.class);
+            configuration.addClass(domain.MdIdentification.class);
+            configuration.addClass(domain.MdProgressCode.class);
+            configuration.addClass(domain.MdIdentificationStatus.class);
+            configuration.addClass(domain.MdBrowseGraphic.class);
+            configuration.addClass(domain.MdFormat.class);
+            configuration.addClass(domain.MdDistributor.class);
+            configuration.addClass(domain.MdDigitalTransferOptions.class);
+            configuration.addClass(domain.CiOnlineFunctionCode.class);
+            configuration.addClass(domain.CiOnlineResource.class);
+            configuration.addClass(domain.MdMediumNameCode.class);
+            configuration.addClass(domain.MdMedium.class);
+            configuration.addClass(domain.MdKeywordTypeCode.class);
+            configuration.addClass(domain.MdKeyword.class);
+            configuration.addClass(domain.MdKeywordKeyword.class);
+            configuration.addClass(domain.MdConstraints.class);
+            configuration.addClass(domain.MdConstraintsUseLimitation.class);
+            configuration.addClass(domain.DsInitiativeTypeCode.class);
+            configuration.addClass(domain.DsAssociationTypeCode.class);
+            configuration.addClass(domain.MdAggregateInfo.class);
+            configuration.addClass(domain.MdDataIdentification.class);
+            configuration.addClass(domain.MdDataIdentificationSpatrep.class);
+            configuration.addClass(domain.MdDataIdentificationCharset.class);
+            configuration.addClass(domain.MdDataIdentificationLang.class);
+            configuration.addClass(domain.MdTopicCategoryCode.class);
+            configuration.addClass(domain.MdDataIdentificationTopcat.class);
+            configuration.addClass(domain.MdResolution.class);
+            configuration.addClass(domain.MdRepresentativeFraction.class);
+            configuration.addClass(domain.ExExtent.class);
+            configuration.addClass(domain.ExGeographicExtent.class);
+            configuration.addClass(domain.ExGeographicBoundingBox.class);
+
+            configuration.addResource("hibernate.cfg.xml");
+
+            SessionFactory sessionFactory = configuration.buildSessionFactory();
+
+            //return configuration.buildSessionFactory();
+            //configuration.configure("hibernate.cfg.xml");
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties()).build();
+//            SessionFactory sessionFactory = configuration
+//            .buildSessionFactory();
+
+            return sessionFactory;
+
+        } catch (Throwable ex) {
+            // Make sure you log the exception, as it might be swallowed
+            System.err.println("Initial SessionFactory creation failed." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+
+    }
+
+    public static void main(String[] args) {
+
+        String dbName="dbprod";
+        String ip="192.168.210.195";
+        String port="1521";
+        String userName="METADATA";
+        String password="METADATA";
+        
+//        DataConfiguration configuration = new DataConfiguration();
+//        configuration.setDatabaseName(dbName);
+//        configuration.setIp(ip);
+//        configuration.setPort(port);
+//        configuration.setUsername(userName);
+//        configuration.setPassword(password);
+//        
+//        HibernateUtilXml hux = new HibernateUtilXml(configuration);
+//
+//        DeleteMigrasiMetadata dmm = new DeleteMigrasiMetadata(hux);
+//        List listFileIdentifier = dmm.getAllFileIdentifier();
+//        
+//        System.out.println("list FileIdentifier =>");
+//        for(int i=0;i<listFileIdentifier.size();i++){
+//            System.out.println(listFileIdentifier.get(i));
+//        }
+//        
+//        String fileIdentifer="RBI1000020111215SUMATERA";
+//        dmm.deleteAll(fileIdentifer);
+        //dmm.getAllCiDate();
+        //dmm.getCiDateDouble();
+       
+        
+        
+    }
+    
+    public static void tester(){
+        DeleteMigrasiMetadata dmm = new DeleteMigrasiMetadata(hibernateUtilXml);
+        dmm.deleteAll("");
+        
+    }
+
+    public static PtLocale getIdByLanguage(String language) {
+
+        PtLocale ptLocale = new PtLocale();
+        PtLocale local = new PtLocale();
+        local.setId(BigDecimal.ONE);
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(PtLocale.class);
+            criteria.add(Restrictions.eq("country", language).ignoreCase());
+            ptLocale = (PtLocale) criteria.uniqueResult();
+
+            if (language == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return ptLocale;
+    }
+
+    public static BigDecimal getMaxMdRepresentativeFractionId() {
+
+        BigDecimal maxId = null;
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdRepresentativeFraction.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((MdRepresentativeFraction) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        session.close();
+
+        return maxId;
+    }
+
+    public static List getListOfId(BigDecimal Id) {
+
+        MdKeyword mdKeyword = new MdKeyword();
+        List list = new ArrayList();
+        List id = new ArrayList();
+        int[] errorList = {-999, -999, -999};
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdKeyword.class);
+            criteria.add(Restrictions.eq("mdIdentificationId", Id));
+            //criteria.setMaxResults(3);
+
+            list = criteria.list();
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext()) {
+
+                mdKeyword = (MdKeyword) iterator.next();
+                id.add(mdKeyword.getId());
+            }
+
+            if (id.size() == 0) {
+
+                List<Integer> intList = new ArrayList<Integer>();
+
+                for (int index = 0; index < errorList.length; index++) {
+                    intList.add(errorList[index]);
+                }
+
+                return intList;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return id;
+    }
+
+    public static List getNumberOfRecord(BigDecimal Id) {
+
+        MdGeometricObjects mdGeometricObjects = new MdGeometricObjects();
+        List list = new ArrayList();
+        List id = new ArrayList();
+        int[] ints = {-999, -999, -999};
+
+        ///ArrayList
+        long count = 0;
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdGeometricObjects.class);
+            criteria.add(Restrictions.eq("mdVectorSpatialRepresentId", Id));
+            //criteria.setProjection(Projections.rowCount());
+            //count = (long )criteria.uniqueResult();
+            //List results = criteria.list();
+
+            //criteria.setMaxResults(3);
+            list = criteria.list();
+            Iterator iterator = list.iterator();
+            // MdGeometricObjects geometricObjects = new MdGeometricObjects();
+            while (iterator.hasNext()) {
+
+                mdGeometricObjects = (MdGeometricObjects) iterator.next();
+                id.add(mdGeometricObjects.getId());
+            }
+            //  Iterator iterator = list.iterator();
+
+//            while (iterator.hasNext()) {
+//			
+//                mdGeometricObjects = () iterator.next();
+//			
+//            }
+//
+            if (id.size() == 0) {
+                List<Integer> intList = new ArrayList<Integer>();
+
+                for (int index = 0; index < ints.length; index++) {
+                    intList.add(ints[index]);
+                }
+
+                return intList;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return id;
+    }
+
+    public static CiResponsibleParty getDataByIdRespon(BigDecimal Id) {
+
+        CiResponsibleParty ciResponsibleParty = new CiResponsibleParty();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiResponsibleParty.class);
+            criteria.add(Restrictions.eq("mdMetadataId", Id))
+                    .add(Restrictions.isNull("ciCitationId"));
+            ciResponsibleParty = (CiResponsibleParty) criteria.uniqueResult();
+
+            if (ciResponsibleParty == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return ciResponsibleParty;
+    }
+
+    public static CiAddress getDataByProperty(BigDecimal id, String administrativeArea, String city, String country, String PostalCode) {
+        CiAddress ciAddress = new CiAddress();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiAddress.class);
+            criteria.add(Restrictions.eq("ci_contactid", id))
+                    .add(Restrictions.eq("administrativearea", administrativeArea))
+                    .add(Restrictions.eq("city", city))
+                    .add(Restrictions.eq("country", country))
+                    .add(Restrictions.eq("postalcode", PostalCode));
+            ciAddress = (CiAddress) criteria.uniqueResult();
+
+            if (ciAddress == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return ciAddress;
+    }
+
+    public static CiAddress getDataById(BigDecimal id) {
+        CiAddress ciAddress = new CiAddress();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiAddress.class);
+            criteria.add(Restrictions.eq("ci_contactid", id));
+            ciAddress = (CiAddress) criteria.uniqueResult();
+
+            if (ciAddress == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return ciAddress;
+    }
+
+    public static domain.MdCoverageDescription getDataByIdCoverage() {
+
+        domain.MdCoverageDescription mdCoverageDescription = new domain.MdCoverageDescription();
+        String attributeDescription = "";
+        String contentType = "003";
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(domain.MdCoverageDescription.class);
+            criteria.add(Restrictions.eq("attributeDescription", attributeDescription))
+                    .add(Restrictions.eq("contentType", contentType));
+
+            mdCoverageDescription = (domain.MdCoverageDescription) criteria.uniqueResult();
+
+            if (mdCoverageDescription == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return mdCoverageDescription;
+    }
+
+    public static BigDecimal getMaxReferenceSystemId() {
+        BigDecimal maxId = null;
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdReferenceSystem.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((MdReferenceSystem) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        session.close();
+        return maxId;
+    }
+
+//    public static void saveUpdateMdMetadata() {
+//        MdMetadataController md = new MdMetadataController();
+//        MdMetadataModel mdModel = new MdMetadataModel();
+//        MdMetadataController mdMax = new MdMetadataController();
+//        BigDecimal harvestId = new BigDecimal(1);
+//        BigDecimal locale = new BigDecimal(1);
+//        BigDecimal id = new BigDecimal(6);
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        Date dt;
+//        //jTextAreaLogData.append("Waiting next process.."+"\n");
+//
+//        // System.out.println(varMetadataEntitySetInformation.getDateStamp());
+//        long x = mdMax.getMaxId();
+//        long y;
+//
+//        if (x > 1) {
+//            y = x + 1;
+//            id = new BigDecimal(y);
+//            harvestId = new BigDecimal(999);
+//            locale = new BigDecimal(999);
+//        }
+//
+//        //System.out.println(id);
+//        mdModel.setId(id);
+//        // mdModel.setHarvestid(harvestId);
+//        mdModel.setLocale(locale);
+//
+//        try {
+//            dt = dateFormat.parse("2013-12-09");
+//            mdModel.setDatestamp(dt);
+//        } catch (ParseException ex) {
+//            //Logger.getLogger(MigrasiMetadata.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        mdModel.setDataseturi("");
+//        mdModel.setFileidentifier("RBI500020131209BANDUNGUTARA_11");
+//        mdModel.setLanguage("Indonesia");
+//        mdModel.setCharacterset("004");
+//        mdModel.setMetadatastandardname("SNI/ISO 19115/19139 2012");
+//        mdModel.setMetadatastandardversion("1.0");
+//        mdModel.setParentidentifier(null);
+//        mdModel.setLocale(locale);
+//
+//        md.saveMdMetadata(mdModel);
+//        String checkData;
+//        if (md.getDataById("RBI500020131209BANDUNGUTARA_11") == null) {
+//            checkData = "";
+//        } else {
+//            checkData = md.getDataById("RBI500020131209BANDUNGUTARA_11").getFileidentifier();
+//        }
+//
+//        if (checkData.equals("")) {
+//            md.saveMdMetadata(mdModel);
+//        } else {
+//            md.updateMdMetadata(mdModel);
+//        }
+//
+//        //jTextAreaLogData.append("Status table MdMetadata " + ret + "\n");
+//    }
+
+    public static BigDecimal getMaxId() {
+        BigDecimal maxId = null;
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdMetadata.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((MdMetadata) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        session.close();
+        return maxId;
+    }
+
+    public static MdMetadata getDataById() {
+
+        String fileIdentifier = "E5E03357-A158-4C3F-A077-83F351515D9D";
+        MdMetadata md = new MdMetadata();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdMetadata.class);
+            criteria.add(Restrictions.eq("fileidentifier", "E5E03357-A158-4C3F-A077-83F351515D9D"));
+            md = (MdMetadata) criteria.uniqueResult();
+
+            if (md == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return md;
+    }
+
+    public static MdCharacterSetCode getDataByCode() {
+
+        String domainName = "utf8";
+        MdCharacterSetCode mcsc = new MdCharacterSetCode();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdCharacterSetCode.class);
+            criteria.add(Restrictions.eq("domainName", domainName));
+
+//            criteria.setMaxResults(1);
+//            List results = criteria.list();
+            mcsc = (MdCharacterSetCode) criteria.uniqueResult();
+
+            if (mcsc == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        //MdCharacterSetCode result = null;
+
+        return mcsc;
+    }
+
+    public static BigDecimal getMaxMdCoverageDescriptionId() {
+
+        BigDecimal maxId = null;
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(domain.MdCoverageDescription.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((domain.MdCoverageDescription) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+
+        session.close();
+        return maxId;
+    }
+
+    public static MdIdentifier getDataByCodeMdIdentifier() {
+
+        String domainName = "4326";
+        MdIdentifier mdIdentifier = new MdIdentifier();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdIdentifier.class);
+            criteria.add(Restrictions.eq("code", domainName));
+
+//            criteria.setMaxResults(1);
+//            List results = criteria.list();
+            criteria.setMaxResults(1);
+
+            List list = criteria.list();
+            Iterator iterator = list.iterator();
+            while (iterator.hasNext()) {
+                mdIdentifier = (MdIdentifier) iterator.next();
+                //System.out.println(student.getName());
+            }
+
+            if (mdIdentifier == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        //MdCharacterSetCode result = null;
+
+        return mdIdentifier;
+    }
+
+    public static CiRoleCode getDataByDomain(String domain) {
+
+        CiRoleCode ciRoleCode = new CiRoleCode();
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiRoleCode.class);
+            criteria.add(Restrictions.eq("domainName", domain));
+            ciRoleCode = (CiRoleCode) criteria.uniqueResult();
+
+            if (ciRoleCode == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        return ciRoleCode;
+    }
+
+    public static BigDecimal getMaxCiContactId() {
+        BigDecimal maxId = null;
+
+        Session session = hibernateUtilXml.buildSession().openSession();
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(CiContact.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((CiContact) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        session.close();
+        return maxId;
+    }
+}

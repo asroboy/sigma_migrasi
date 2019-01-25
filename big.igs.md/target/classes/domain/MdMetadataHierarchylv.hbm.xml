@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 20, 2017 9:23:58 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="domain.MdMetadataHierarchylv" table="MD_METADATA_HIERARCHYLV" schema="METADATA">
+        <id name="mdMetadataid" type="big_decimal">
+            <column name="MD_METADATAID" precision="22" scale="0" />
+            <generator class="assigned"></generator>
+        </id>
+         <property name="hierarchylevel" type="string">
+            <column name="HIERARCHYLEVEL" length="3" />
+        </property>
+    </class>
+</hibernate-mapping>

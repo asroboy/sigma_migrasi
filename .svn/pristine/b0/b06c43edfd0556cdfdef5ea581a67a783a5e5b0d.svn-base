@@ -1,0 +1,230 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package controller;
+
+import config.HibernateUtil;
+import config.HibernateUtilXml;
+import domain.MdMaintenanceInfo;
+import domain.MdUploadFile;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import model.table.MdUploadFileModel;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+
+/**
+ *
+ * @author wallet
+ */
+public class MdUploadFileController {
+
+    Session session;
+    HibernateUtilXml hibernateUtilXml;
+
+//    public MdUploadFileController(HibernateUtilXml hibernateUtilXml) {
+//        this.hibernateUtilXml = hibernateUtilXml;
+//    }
+
+    public MdUploadFileController() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public MdUploadFileController(Session session, HibernateUtilXml hibernateUtilXml) {
+        this.session = session;
+        this.hibernateUtilXml = hibernateUtilXml;
+    }
+    
+    public BigDecimal getMaxMdUploadId() {
+        BigDecimal maxId = null;
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdUploadFile.class);
+            criteria.addOrder(Order.desc("id"));
+            criteria.setMaxResults(1);
+            List results = criteria.list();
+
+            if (results.size() > 0) {
+                maxId = ((MdUploadFile) results.get(0)).getId();
+            } else {
+                //  maxId = 0;
+            }
+
+            trx.commit();
+
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        }
+        //session.close();
+        return maxId;
+    }
+    
+     public byte[] convertFileContentToBlob(String filePath) throws IOException {
+        byte[] fileContent = null;
+        // initialize string buffer to hold contents of file
+        StringBuffer fileContentStr = new StringBuffer("");
+        BufferedReader reader = null;
+        try {
+            // initialize buffered reader  
+            reader = new BufferedReader(new FileReader(filePath));
+            String line = null;
+            // read lines of file
+            while ((line = reader.readLine()) != null) {
+                //append line to string buffer
+                fileContentStr.append(line).append("\n");
+            }
+            // convert string to byte array
+            fileContent = fileContentStr.toString().trim().getBytes();
+        } catch (IOException e) {
+            throw new IOException("Unable to convert file to byte array. " + e.getMessage());
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return fileContent;
+    }
+
+    public MdUploadFile getDataById(String fileIdentifier) {
+        MdUploadFile mdUploadFile = new MdUploadFile();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdUploadFile.class);
+            criteria.add(Restrictions.eq("fileIdentifier", fileIdentifier));
+            mdUploadFile = (MdUploadFile) criteria.uniqueResult();
+
+            if (mdUploadFile == null) {
+                return null;
+            }
+
+            trx.commit();
+        } catch (Exception e) {
+            trx.rollback();
+            e.printStackTrace();
+        } finally {
+          //  session.close();
+        }
+
+        return mdUploadFile;
+    }
+
+    public String saveMdUpload(MdUploadFileModel mdModel) {
+
+        MdUploadFile mdUploadFile = new MdUploadFile();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.getTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            mdUploadFile.setId(mdModel.getId());
+            mdUploadFile.setFileIdentifier(mdModel.getFileIdentifier());
+            mdUploadFile.setFileName(mdModel.getFileName());
+            //System.out.println(md);
+            session.save(mdUploadFile);
+            trx.commit();
+
+            return "berhasil disimpan.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+           // session.close();
+        }
+    }
+
+    public String updateMdUpload(BigDecimal id,MdUploadFileModel mdModel) {
+
+        MdUploadFile mdUploadFile = new MdUploadFile();
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+        
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdUploadFile.class);
+            criteria.add(Restrictions.eq("id", id));
+            mdUploadFile = (MdUploadFile) criteria.uniqueResult();
+
+            mdUploadFile.setFileIdentifier(mdModel.getFileIdentifier());
+            mdUploadFile.setFileName(mdModel.getFileName());
+
+            session.update(mdUploadFile);
+            trx.commit();
+
+            return "berhasil diubah.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+          //  session.close();
+        }
+    }
+    
+    public String deletedMdUploadFile(BigDecimal Id) {
+
+        MdUploadFile muf = new MdUploadFile();        
+
+        if (!session.isOpen()) {
+            session = hibernateUtilXml.buildSession().openSession();
+        }
+        Transaction trx = session.beginTransaction();
+
+        try {
+            if (!trx.isActive()) {
+                trx.begin();
+            }
+
+            Criteria criteria = session.createCriteria(MdUploadFile.class);
+            criteria.add(Restrictions.eq("id", Id));
+            muf = (MdUploadFile) criteria.uniqueResult();
+
+            session.delete(muf);
+            trx.commit();
+            
+            return "berhasil dihapus.....!!";
+        } catch (Exception e) {
+            trx.rollback();
+            return "Error "+e.getMessage();
+        } finally {
+            //session.close();
+        }
+    }
+}

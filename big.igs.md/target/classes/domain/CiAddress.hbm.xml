@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Sep 20, 2017 9:23:58 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="domain.CiAddress" table="CI_ADDRESS" schema="METADATA">
+        <id name="id" type="big_decimal">
+            <column name="ID" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="administrativearea" type="string">
+            <column name="ADMINISTRATIVEAREA" />
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" />
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" />
+        </property>
+        <property name="postalcode" type="string">
+            <column name="POSTALCODE" />
+        </property>
+        <property name="ci_contactid" type="big_decimal">
+            <column name="CI_CONTACTID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>
